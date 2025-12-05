@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada - Evelyn Cosmetics">
+  <main class="min-h-[80vh] flex items-center justify-center bg-background !px-4">
+    <div class="text-center max-w-md">
+      <!-- Icono decorativo -->
+      <div class="!mb-8">
+        <span class="text-9xl font-bold text-primary/20">404</span>
+      </div>
+      
+      <!-- Mensaje principal -->
+      <h1 class="text-3xl md:text-4xl font-semibold text-text !mb-4">
+        ¡Oops! Página no encontrada
+      </h1>
+      
+      <p class="text-text/70 !mb-8">
+        Lo sentimos, la página que buscas no existe o ha sido movida. 
+        Pero no te preocupes, ¡tu belleza sigue intacta!
+      </p>
+      
+      <!-- Botón para volver -->
+      <a 
+        href="/" 
+        class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-medium !px-6 !py-3 rounded-full transition-all duration-300 hover:scale-105"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Volver al inicio
+      </a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  main > div > div:first-child {
+    animation: float 3s ease-in-out infinite;
+  }
+</style>
