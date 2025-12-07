@@ -1,38 +1,220 @@
 import React, { useState } from 'react';
-import { FaHamburger } from 'react-icons/fa';
-import {FiMenu, FiShoppingCart, FiSearch} from "react-icons/fi";
+import { motion } from 'framer-motion';
+import { FiMenu, FiShoppingCart, FiSearch, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import HamburguerMenu from './HamburguerMenu.jsx';
+
+// Categorías principales (siempre visibles)
+const mainCategories = [
+    { 
+        label: 'Categoria 1', 
+        subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4']
+    },
+    { label: 'Categoria 2', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
+    { label: 'Categoria 3', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
+];
+
+// Categorías extra (se muestran al dar "Ver más")
+const extraCategories = [
+    { label: 'Categoria 4', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
+    { label: 'Categoria 5', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
+    { label: 'Categoria 6', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
+];
+
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false);
+    const [showCategories, setShowCategories] = useState(false);
+    const [openCategory, setOpenCategory] = useState(null);
+    const [showMore, setShowMore] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    
+
+    React.useEffect(() => {
+        const checkIsMobile = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+        
+        checkIsMobile();
+        window.addEventListener('resize', checkIsMobile);
+        
+        return () => window.removeEventListener('resize', checkIsMobile);
+    }, []);
 
     return (
-        <header className="bg-white w-full !px-1 !pb-2 md:!px-2 border-b-2 border-gray-200 flex flex-col">
-        <div className="flex items-center justify-between w-full items-center !py-2">
-            <div id="logo" onClick={() => window.location.href = "/"} className="order-2 md:order-1 w-auto flex items-center justify-center absolute left-1/2 -translate-x-1/2">
-            <img src="/evelyncosmetics.png" className="w-15 h-15 cursor-pointer"  alt="" />
-            </div>
-            <div id="menu" className="order-1 md:order-2 !ml-2 rounded-full !p-2 duration-300 flex justify-center cursor-pointer" onClick={() => setOpenMenu(!openMenu)}>
-                <FiMenu className='h-10 w-10 '/>
-            </div>
-            <div id="cart" className="flex items-center justify-center !gap-1 order-3 md:order-3 !mr-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" onClick={() => abrirCarrito()}>
-                <h6 className="!text-sm">$0.00</h6>
-                <FiShoppingCart className='h-8 w-8'/>
-            </div>
-        </div>
-        {openMenu && (
-            <HamburguerMenu onClose={() => setOpenMenu(false)}/>
-        )}
-        <div id="search" className="order-4 md:order-4 !mt-1 relative">
-            <input 
-                type="text" 
-                placeholder="Buscar" 
-                className="w-full h-10 border-2 border-gray-200 rounded-full !pl-4 !pr-12 outline-none focus:border-gray-400 transition-colors"
-            />
-            <button className="absolute right-1 top-1/2 -translate-y-1/2 !py-2 !px-0 text-gray-500 hover:text-gray-700">
-                <FiSearch className="h-8 w-8 cursor-pointer rounded-full !p-1"/>
-            </button>
-        </div>
-        </header>
+        <motion.header 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+    
+        className="bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between">
+            {/* Logo */}
+            <motion.div 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            id="logo" onClick={() => window.location.href = "/"} className="order-2 lg:order-1 w-auto flex items-center justify-center absolute top-2 left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 cursor-pointer">
+                <img src="/evelyncosmetics.png" className="w-15 h-15 lg:w-16 lg:h-16" alt="Evelyn Cosmetics" />
+            </motion.div>
+
+            {/* Hamburger menu - mobile only */}
+            <motion.div 
+                whileHover={{ scale: 1.05 }}
+                id="menu" 
+                className="order-1 rounded-full !p-2 duration-300 flex lg:hidden justify-center cursor-pointer" 
+                onClick={() => setOpenMenu(!openMenu)}
+            >
+                <FiMenu className='h-10 w-10'/>
+            </motion.div>
+
+            {/* Search bar */}
+            <motion.div 
+            whileHover={{ scale: 1.02 }}
+            id="search" className="order-4 lg:order-2 !mt-2 lg:!mt-0 relative w-full lg:w-[100vh] lg:flex-1 lg:max-w-lg lg:!mx-8">
+                <input 
+                    type="text" 
+                    placeholder="Buscar productos..." 
+                    className="w-full h-12 border-2 border-gray-200 rounded-full !pl-4 !pr-10 outline-none focus:border-gray-400 transition-colors"
+                />
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                    <FiSearch className="h-6 w-6 cursor-pointer"/>
+                </button>
+            </motion.div>
+
+            {/* Navigation - desktop only */}
+            <nav id="nav" className="hidden lg:flex items-center !gap-6 order-3 text-gray-700">
+                <motion.a 
+                whileHover={{ scale: 1.05 }}
+                href="/tienda" className="hover:text-gray-900 transition-colors font-medium">Tienda</motion.a>
+                
+                {/* Dropdown Categorías */}
+                <div
+                    className="relative"
+                    onMouseEnter={() => setShowCategories(true)}
+                    onMouseLeave={() => { setShowCategories(false); setOpenCategory(null); setShowMore(false); }}
+                >
+                    <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-1 hover:text-gray-900 transition-colors font-medium py-2">
+                        Categorías
+                        <FiChevronDown className={`h-4 w-4 transition-transform ${showCategories ? 'rotate-180 transform ease-in-out duration-200' : ''}`}/>
+                    </motion.button>
+                    
+                    {/* Dropdown menu */}
+                    {showCategories && (
+                        <div className="absolute top-full left-0 pt-2! w-56 z-50">
+                            <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden max-h-96 overflow-y-auto">
+                                {/* Categorías principales */}
+                                {mainCategories.map((category, index) => (
+                                    <div key={`main-${index}`}>
+                                        <div 
+                                            className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
+                                            onClick={() => setOpenCategory(openCategory === `main-${index}` ? null : `main-${index}`)}
+                                        >
+                                            <span className="font-medium">{category.label}</span>
+                                            {category.subcategories && (
+                                                openCategory === `main-${index}` 
+                                                    ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
+                                                    : <FiChevronDown className="h-4 w-4 text-gray-600"/>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Subcategorías */}
+                                        {category.subcategories && openCategory === `main-${index}` && (
+                                            <div className="bg-gray-50">
+                                                {category.subcategories.map((sub, subIndex) => (
+                                                    <a 
+                                                        key={subIndex}
+                                                        href="#"
+                                                        className="block !px-6 !py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border-b border-gray-100"
+                                                    >
+                                                        {sub}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                {/* Categorías extra (visibles solo si showMore es true) */}
+                                {showMore && extraCategories.map((category, index) => (
+                                    <div key={`extra-${index}`}>
+                                        <div 
+                                            className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
+                                            onClick={() => setOpenCategory(openCategory === `extra-${index}` ? null : `extra-${index}`)}
+                                        >
+                                            <span className="font-medium">{category.label}</span>
+                                            {category.subcategories && (
+                                                openCategory === `extra-${index}` 
+                                                    ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
+                                                    : <FiChevronDown className="h-4 w-4 text-gray-600"/>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Subcategorías */}
+                                        {category.subcategories && openCategory === `extra-${index}` && (
+                                            <div className="bg-gray-50">
+                                                {category.subcategories.map((sub, subIndex) => (
+                                                    <a 
+                                                        key={subIndex}
+                                                        href="#"
+                                                        className="block !px-6 !py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border-b border-gray-100"
+                                                    >
+                                                        {sub}
+                                                    </a>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                {/* Botón Ver más / Ver menos */}
+                                <motion.div 
+                                    whileHover={{ scale: 1.02 }}
+                                    className="flex items-center !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer"
+                                    onClick={() => setShowMore(!showMore)}
+                                >
+                                    <span className="font-medium">
+                                        {showMore ? 'Ver menos' : 'Ver más'}
+                                    </span>
+                                </motion.div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                
+                <motion.a 
+                    whileHover={{ scale: 1.05 }}
+                    href="/blog" 
+                    className="hover:text-gray-900 transition-colors font-medium"
+                >
+                    Blog
+                </motion.a>
+                {/* Cart */}
+                <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    id="cart" 
+                    className="order-3 lg:order-4 flex items-center justify-center gap-1 mr-2 lg:mr-0 lg:ml-6 cursor-pointer p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                    onClick={() => abrirCarrito()}
+                >
+                    <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                </motion.div>
+            </nav>
+            {/* Mobile menu */}
+            {openMenu && (
+                <HamburguerMenu onClose={() => setOpenMenu(false)}/>
+            )}
+            
+            {/* Mobile content */}
+            {isMobile && (
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    id="cart" 
+                    className="order-3 lg:order-4 flex items-center justify-center gap-1 mr-2 lg:mr-0 lg:ml-6 cursor-pointer p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                    onClick={() => abrirCarrito()}
+                  >
+                        <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                    </motion.div>
+            )}
+        </motion.header>
     );
 };
 
