@@ -58,11 +58,11 @@ const Hero = () => {
                         </picture>
                         
                         {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/30"></div>
+                        <div className="absolute inset-0 h-[100%] bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
                         
                         {/* Content */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white !px-4 ">
-                            <h1 className="text-5xl md:text-8xl font-serif tracking-widest text-[#F3E5AB] drop-shadow-lg !mb-4 opacity-90">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 ">
+                            <h1 className="text-5xl md:text-8xl font-serif tracking-widest text-[#F3E5AB] drop-shadow-lg mb-4 opacity-90">
                                 {slide.title}
                             </h1>
                             <p className="text-xl md:text-2xl font-light tracking-wider text-white/90 drop-shadow-md font-sans">
