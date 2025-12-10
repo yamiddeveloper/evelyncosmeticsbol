@@ -1,28 +1,11 @@
 import { useState, useEffect } from 'react'
 import { FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi'
+import { mainCategories, extraCategories } from '../data/categories.js'
 
 const ANIMATION_DURATION = 300
 
-// Categorías principales (siempre visibles)
-const mainCategories = [
-  { label: 'Tienda', href: '/tienda' },
-  { 
-    label: 'Categoria 1', 
-    subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4']
-  },
-  { label: 'Categoria 2', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
-  { label: 'Categoria 3', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
-]
-
-// Categorías extra (se muestran al dar "Ver más")
-const extraCategories = [
-  { label: 'Categoria 4', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-  { label: 'Categoria 5', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-  { label: 'Categoria 6', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-  { label: 'Categoria 7', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-  { label: 'Categoria 8', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-  { label: 'Categoria 9', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-]
+// Item de tienda (siempre primero)
+const tiendaItem = { label: 'Tienda', href: '/tienda' }
 
 // Items finales (siempre al final)
 const bottomItems = [
@@ -82,9 +65,17 @@ const HamburguerMenu = ({ onClose }) => {
 
         {/* Menu Items */}
         <nav className="flex flex-col">
+          {/* Tienda */}
+          <a 
+            href={tiendaItem.href}
+            className="flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
+          >
+            <span className="text-base font-medium text-gray-800">{tiendaItem.label}</span>
+          </a>
+
           {/* Categorías principales */}
           {mainCategories.map((item, index) => (
-            <div key={`main-${index}`}>
+            <div key={item.id}>
               <div 
                 className="flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
                 onClick={() => item.subcategories ? toggleCategory(`main-${index}`) : null}
@@ -96,15 +87,15 @@ const HamburguerMenu = ({ onClose }) => {
                     : <FiChevronDown className="text-gray-600" />
                 )}
               </div>
-              {item.subcategories && openCategory === `main-${index}` && (
+              {item.subcategories && item.subcategories.length > 0 && openCategory === `main-${index}` && (
                 <div className="bg-gray-50">
-                  {item.subcategories.map((sub, subIndex) => (
+                  {item.subcategories.map((sub) => (
                     <a 
-                      key={subIndex}
-                      href="#"
+                      key={sub.id}
+                      href={`/categoria/${item.id}/${sub.id}`}
                       className="block !px-6 !py-2 text-base text-gray-600 hover:bg-gray-100 border-b border-gray-200"
                     >
-                      {sub}
+                      {sub.label}
                     </a>
                   ))}
                 </div>
@@ -114,7 +105,7 @@ const HamburguerMenu = ({ onClose }) => {
 
           {/* Categorías extra (visibles solo si showMore es true) - aparecen ARRIBA del botón */}
           {showMore && extraCategories.map((item, index) => (
-            <div key={`extra-${index}`}>
+            <div key={item.id}>
               <div 
                 className="flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
                 onClick={() => item.subcategories ? toggleCategory(`extra-${index}`) : null}
@@ -126,15 +117,15 @@ const HamburguerMenu = ({ onClose }) => {
                     : <FiChevronDown className="text-gray-600" />
                 )}
               </div>
-              {item.subcategories && openCategory === `extra-${index}` && (
+              {item.subcategories && item.subcategories.length > 0 && openCategory === `extra-${index}` && (
                 <div className="bg-gray-50">
-                  {item.subcategories.map((sub, subIndex) => (
+                  {item.subcategories.map((sub) => (
                     <a 
-                      key={subIndex}
-                      href="#"
+                      key={sub.id}
+                      href={`/categoria/${item.id}/${sub.id}`}
                       className="block !px-6 !py-2 text-base text-gray-600 hover:bg-gray-100 border-b border-gray-200"
                     >
-                      {sub}
+                      {sub.label}
                     </a>
                   ))}
                 </div>

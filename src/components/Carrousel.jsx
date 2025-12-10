@@ -2,10 +2,11 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ product, id, index }) => {
+    const [productClicked, setProductClicked] = useState(false);
     return (
         <motion.div 
-            className="flex-shrink-0 w-[200px] sm:w-[220px] md:w-[260px] lg:w-[280px] bg-white rounded-2xl overflow-hidden cursor-pointer"
+            className="flex-shrink-0 w-[180px] sm:w-[200px] md:w-[240px] lg:w-[280px] xl:w-[320px] 2xl:w-[360px] bg-white rounded-2xl overflow-hidden cursor-pointer"
             initial={{ opacity: 0.4, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -16,12 +17,14 @@ const ProductCard = ({ product, index }) => {
             whileHover={{ 
                 scale: 1.03, 
             }}
+            id={`product-${id}-${index}`}
+            key={`${product.id}-${id}-${index}`}
         >
             <div className="relative">
                 <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] object-cover"
+                    className="w-full h-[180px] sm:h-[200px] md:h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[340px] object-cover"
                 />
                 {product.discount && (
                     <span className="absolute top-4 right-4 bg-pink-200 text-pink-800 text-sm font-semibold !px-3 !py-1 rounded">
@@ -32,9 +35,9 @@ const ProductCard = ({ product, index }) => {
             <div className="p-3 md:p-4 text-center">
                 <h3 className="text-sm md:text-base lg:text-lg font-medium text-gray-800 !mb-1 md:!mb-2 line-clamp-2">{product.name}</h3>
                 <p className="text-base md:text-lg lg:text-xl font-bold text-gray-900 !mb-2 md:!mb-3">${product.price}</p>
-                <button className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium text-sm md:text-base !py-2 md:!py-3 !px-4 md:!px-6 rounded-full transition-colors cursor-pointer">
-                    Agregar al carrito
-                </button>
+                <motion.button whileTap={{ scale: 0.95 }} className={`w-full text-white font-medium text-sm md:text-base !py-2 md:!py-3 !px-4 md:!px-6 rounded-full transition-colors cursor-pointer ${productClicked ? 'bg-black ' : 'bg-gray-400 hover:bg-gray-600'}`} onClick={() => setProductClicked(!productClicked)}>
+                    {productClicked ? 'Ver carrito' : 'Agregar al carrito'}
+                </motion.button>
             </div>
         </motion.div>
     );
@@ -74,7 +77,7 @@ const Carrousel = ({ products = [] }) => {
             {/* Botón izquierdo */}
             <motion.button 
                 onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-lg border border-gray-200 rounded-full !p-2 md:!p-3 hover:bg-gray-100 transition-colors"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-lg border border-gray-200 rounded-full !p-2 md:!p-3 hover:bg-gray-100 transition-colors cursor-pointer"
                 aria-label="Anterior"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: canScrollLeft ? 1 : 0, x: canScrollLeft ? 0 : -20 }}
@@ -103,7 +106,7 @@ const Carrousel = ({ products = [] }) => {
             {/* Botón derecho */}
             <motion.button 
                 onClick={() => scroll('right')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-lg border border-gray-200 rounded-full !p-2 md:!p-3 hover:bg-gray-100 transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-lg border border-gray-200 rounded-full !p-2 md:!p-3 hover:bg-gray-100 transition-colors cursor-pointer"
                 aria-label="Siguiente"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: canScrollRight ? 1 : 0, x: canScrollRight ? 0 : 20 }}

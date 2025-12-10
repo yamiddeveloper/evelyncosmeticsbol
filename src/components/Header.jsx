@@ -1,24 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FiMenu, FiShoppingCart, FiSearch, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import HamburguerMenu from './HamburguerMenu.jsx';
-
-// Categorías principales (siempre visibles)
-const mainCategories = [
-    { 
-        label: 'Categoria 1', 
-        subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4']
-    },
-    { label: 'Categoria 2', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
-    { label: 'Categoria 3', subcategories: ['Subcategoria 1', 'Subcategoria 2', 'Subcategoria 3', 'Subcategoria 4'] },
-];
-
-// Categorías extra (se muestran al dar "Ver más")
-const extraCategories = [
-    { label: 'Categoria 4', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-    { label: 'Categoria 5', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-    { label: 'Categoria 6', subcategories: ['Subcategoria 1', 'Subcategoria 2'] },
-];
+import { mainCategories, extraCategories } from '../data/categories.js';
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false);
@@ -26,10 +10,12 @@ const Header = () => {
     const [openCategory, setOpenCategory] = useState(null);
     const [showMore, setShowMore] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
 
     
 
-    React.useEffect(() => {
+    useEffect(() => {
         const checkIsMobile = () => {
             setIsMobile(window.innerWidth < 1024);
         };
@@ -40,13 +26,32 @@ const Header = () => {
         return () => window.removeEventListener('resize', checkIsMobile);
     }, []);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY < 10) {
+                setIsVisible(true);
+            } else if (currentScrollY > lastScrollY.current) {
+                setIsVisible(false);
+            } else {
+                setIsVisible(true);
+            }
+            
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <motion.header 
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: isVisible ? 0 : -200 }}
         transition={{ duration: 0.3 }}
     
-        className="bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between">
+        className="bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between fixed top-0 left-0 right-0 z-50">
             {/* Logo */}
             <motion.div 
             whileHover={{ scale: 1.05 }}
@@ -100,7 +105,7 @@ const Header = () => {
                     
                     {/* Dropdown menu */}
                     {showCategories && (
-                        <div className="absolute top-full left-0 pt-2! w-56 z-50">
+                        <div className="absolute top-full left-0 !pt-2 w-56 z-50">
                             <div className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden max-h-96 overflow-y-auto">
                                 {/* Categorías principales */}
                                 {mainCategories.map((category, index) => (
@@ -110,7 +115,7 @@ const Header = () => {
                                             onClick={() => setOpenCategory(openCategory === `main-${index}` ? null : `main-${index}`)}
                                         >
                                             <span className="font-medium">{category.label}</span>
-                                            {category.subcategories && (
+                                            {category.subcategories && category.subcategories.length > 0 && (
                                                 openCategory === `main-${index}` 
                                                     ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
                                                     : <FiChevronDown className="h-4 w-4 text-gray-600"/>
@@ -118,15 +123,15 @@ const Header = () => {
                                         </div>
                                         
                                         {/* Subcategorías */}
-                                        {category.subcategories && openCategory === `main-${index}` && (
+                                        {category.subcategories && category.subcategories.length > 0 && openCategory === `main-${index}` && (
                                             <div className="bg-gray-50">
                                                 {category.subcategories.map((sub, subIndex) => (
                                                     <a 
-                                                        key={subIndex}
-                                                        href="#"
+                                                        key={sub.id}
+                                                        href={`/categoria/${category.id}/${sub.id}`}
                                                         className="block !px-6 !py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border-b border-gray-100"
                                                     >
-                                                        {sub}
+                                                        {sub.label}
                                                     </a>
                                                 ))}
                                             </div>
@@ -142,7 +147,7 @@ const Header = () => {
                                             onClick={() => setOpenCategory(openCategory === `extra-${index}` ? null : `extra-${index}`)}
                                         >
                                             <span className="font-medium">{category.label}</span>
-                                            {category.subcategories && (
+                                            {category.subcategories && category.subcategories.length > 0 && (
                                                 openCategory === `extra-${index}` 
                                                     ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
                                                     : <FiChevronDown className="h-4 w-4 text-gray-600"/>
@@ -150,15 +155,15 @@ const Header = () => {
                                         </div>
                                         
                                         {/* Subcategorías */}
-                                        {category.subcategories && openCategory === `extra-${index}` && (
+                                        {category.subcategories && category.subcategories.length > 0 && openCategory === `extra-${index}` && (
                                             <div className="bg-gray-50">
                                                 {category.subcategories.map((sub, subIndex) => (
                                                     <a 
-                                                        key={subIndex}
-                                                        href="#"
+                                                        key={sub.id}
+                                                        href={`/categoria/${category.id}/${sub.id}`}
                                                         className="block !px-6 !py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors border-b border-gray-100"
                                                     >
-                                                        {sub}
+                                                        {sub.label}
                                                     </a>
                                                 ))}
                                             </div>
@@ -188,31 +193,20 @@ const Header = () => {
                 >
                     Blog
                 </motion.a>
-                {/* Cart */}
-                <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    id="cart" 
-                    className="order-3 lg:order-4 flex items-center justify-center gap-1 mr-2 lg:mr-0 lg:ml-6 cursor-pointer p-2 rounded-full hover:shadow-lg transition-all duration-300" 
-                    onClick={() => abrirCarrito()}
-                >
-                    <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
-                </motion.div>
             </nav>
+            {/* Cart - único para todas las pantallas */}
+            <motion.div 
+                whileHover={{ scale: 1.05 }}
+                id="cart" 
+                className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-6 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                onClick={() => abrirCarrito()}
+            >
+                <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+            </motion.div>
+
             {/* Mobile menu */}
             {openMenu && (
                 <HamburguerMenu onClose={() => setOpenMenu(false)}/>
-            )}
-            
-            {/* Mobile content */}
-            {isMobile && (
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    id="cart" 
-                    className="order-3 lg:order-4 flex items-center justify-center gap-1 mr-2 lg:mr-0 lg:ml-6 cursor-pointer p-2 rounded-full hover:shadow-lg transition-all duration-300" 
-                    onClick={() => abrirCarrito()}
-                  >
-                        <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
-                    </motion.div>
             )}
         </motion.header>
     );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const slides = [
     {
@@ -37,7 +38,12 @@ const Hero = () => {
     };
 
     return (
-        <div className="relative w-full aspect-[4/3] md:aspect-[3/1] overflow-hidden group">
+        <motion.div 
+        className="relative watch:aspect-[4/6] 4xs:aspect-[4/6] 3xs:aspect-[4/6] 2xs:aspect-[4/5] xs:aspect-[4/5] sm:aspect-[4/4] md:aspect-[4/3] lg:aspect-[4/2] xl:aspect-[5/2] w-full overflow-hidden group mt-[130px] lg:mt-[80px]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        >
             {/* Slides Container */}
             <div 
                 className="w-full h-full flex transition-transform duration-1000 ease-in-out"
@@ -58,14 +64,14 @@ const Hero = () => {
                         </picture>
                         
                         {/* Overlay Gradient */}
-                        <div className="absolute inset-0 h-[100%] bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
+                        <div className="absolute inset-0 h-full bg-gradient-to-b from-transparent via-transparent to-black/40"></div>
                         
                         {/* Content */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 ">
-                            <h1 className="text-5xl md:text-8xl font-serif tracking-widest text-[#F3E5AB] drop-shadow-lg mb-4 opacity-90">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 !mt-20">
+                            <h1 className="watch:text-4xl xs:text-5xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif tracking-widest text-[#F3E5AB] drop-shadow-lg !mb-2 opacity-90">
                                 {slide.title}
                             </h1>
-                            <p className="text-xl md:text-2xl font-light tracking-wider text-white/90 drop-shadow-md font-sans">
+                            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light tracking-wider text-white/90 drop-shadow-md font-sans">
                                 {slide.subtitle}
                             </p>
                         </div>
@@ -88,7 +94,7 @@ const Hero = () => {
                     />
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 

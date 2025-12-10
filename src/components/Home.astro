@@ -1,6 +1,7 @@
 ---
 import Hero from './Hero.jsx';
 import Section from './Section';
+import SectionCategories from './SectionCategories';
 const objeto_productos =  [
     {
         id: 1,
@@ -8,7 +9,6 @@ const objeto_productos =  [
         description: 'Sérum hidratante con vitamina C',
         price: '45.00',
         image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        discount: '20% OFF'
     },
     {
         id: 2,
@@ -16,7 +16,6 @@ const objeto_productos =  [
         description: 'Crema facial de día',
         price: '38.00',
         image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop',
-        discount: '15% OFF'
     },
     {
         id: 3,
@@ -24,7 +23,6 @@ const objeto_productos =  [
         description: 'Aceite de rosa mosqueta',
         price: '52.00',
         image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=400&h=400&fit=crop',
-        discount: '30% OFF'
     },
     {
         id: 4,
@@ -39,7 +37,6 @@ const objeto_productos =  [
         description: 'Tónico equilibrante',
         price: '32.00',
         image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38b15?w=400&h=400&fit=crop',
-        discount: '10% OFF'
     },
     {
         id: 6,
@@ -55,7 +52,7 @@ const objeto_productos =  [
     <Hero client:load />
     <Section client:load id="destacados" titulo="Destacados" products={objeto_productos} />
     <Section client:load id="mas-vendidos" titulo="Más Vendidos" products={objeto_productos} />
-    <Section client:load id="por-necesidad" titulo="Por Necesidad" products={objeto_productos} />
+    <SectionCategories client:load id="por-necesidad" titulo="Por Necesidad" />
     <Section client:load id="en-oferta" titulo="En Oferta" products={objeto_productos} />
     <Section client:load id="disponible" titulo="Disponible en Stock" products={objeto_productos} />
 </div>

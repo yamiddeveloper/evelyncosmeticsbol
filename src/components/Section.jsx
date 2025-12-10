@@ -6,14 +6,14 @@ const Section = ({ id, titulo, products }) => {
     return (
         <motion.section 
             id={id} 
-            className='w-full !px-4 !py-8'
+            className='w-full max-w-[2000px] mx-auto !px-4 md:!px-8 lg:!px-12 !py-8 lg:!py-12 flex justify-center flex-col items-center'
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
         >
             <motion.h2 
-                className='text-3xl md:text-4xl font-bold text-center !mb-8'
+                className='watch:text-2xl 4xs:text-3xl 3xs:text-3xl 2xs:text-3xl xs:text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center !mb-6 lg:!mb-8 watch:max-w-[200px]'
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -21,7 +21,7 @@ const Section = ({ id, titulo, products }) => {
             >
                 {titulo}
             </motion.h2>
-            <Carrousel products={products} />
+            <Carrousel products={products} id={id} />
             <motion.div 
                 className='flex justify-center !mt-6'
                 initial={{ opacity: 0, y: 10 }}
@@ -29,7 +29,7 @@ const Section = ({ id, titulo, products }) => {
                 transition={{ delay: 0.4 }}
                 viewport={{ once: true }}
             >
-                <button className='bg-gray-800 hover:bg-gray-900 text-white !px-8 !py-3 rounded-full transition-colors'>
+                <button className='bg-gray-800 hover:bg-gray-900 text-white !px-8 !py-3 rounded-full transition-colors' onClick={() => window.location.href = `/${id}`}>
                     Ver todos
                 </button>
             </motion.div>
