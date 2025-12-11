@@ -18,7 +18,7 @@ interface Props {
 const {
 	title,
 	description = "Tu destino de belleza en Bolivia. Cosméticos de alta calidad ✨",
-	image = "https://evelyncosmeticsbol.vercel.app/background.png",
+	image = "/og-image.jpg",
 	canonicalURL = Astro.url.href,
 	type = "website",
 	keywords = "cosméticos, maquillaje, belleza, cuidado de piel, fragancias, Evelyn Cosmetics, Bolivia",
@@ -60,9 +60,7 @@ const siteName = "Evelyn Cosmetics";
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={imageURL} />
 		<meta property="og:image:secure_url" content={imageURL} />
-		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:width" content="1365" />
-		<meta property="og:image:height" content="607" />
+		<meta property="og:image:type" content="image/jpeg" />
 		<meta property="og:image:alt" content={`${title} - ${siteName}`} />
 		<meta property="og:site_name" content={siteName} />
 		<meta property="og:locale" content="es_BO" />
