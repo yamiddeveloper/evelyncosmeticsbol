@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import CategoryDropdown from './CategoryDropdown';
 
 interface Product {
     id: number;
@@ -63,14 +64,7 @@ export default function ProductList({
                     </div>
                     
                     {/* Categoría */}
-                    <div>
-                        <select className="w-full bg-gray-800 text-white rounded-md !px-4 !py-2 text-sm focus:outline-none cursor-pointer">
-                            <option>Seleccionar categoría</option>
-                            {categories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>{cat.label}</option>
-                            ))}
-                        </select>
-                    </div>
+                    <CategoryDropdown />
                 </motion.div>
             )}
 

@@ -1,0 +1,87 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProductList from '../../../components/ProductList.tsx';
+import { allCategories } from '../../../data/categories.js';
+
+// Generar rutas estáticas para todas las subcategorías
+export function getStaticPaths() {
+    const paths: { params: { categoria: string; subcategoria: string } }[] = [];
+    
+    allCategories.forEach(cat => {
+        if (cat.subcategories && cat.subcategories.length > 0) {
+            cat.subcategories.forEach(sub => {
+                paths.push({
+                    params: { 
+                        categoria: cat.id, 
+                        subcategoria: sub.id 
+                    }
+                });
+            });
+        }
+    });
+    
+    return paths;
+}
+
+const { categoria, subcategoria } = Astro.params;
+
+// Buscar la categoría padre
+const categoryData = allCategories.find(cat => cat.id === categoria);
+
+// Si no existe la categoría, redirigir a 404
+if (!categoryData) {
+    return Astro.redirect('/404');
+}
+
+// Buscar la subcategoría
+const subcategoryData = categoryData.subcategories?.find((sub: any) => sub.id === subcategoria);
+
+// Si no existe la subcategoría, redirigir a 404
+if (!subcategoryData) {
+    return Astro.redirect('/404');
+}
+
+// Productos de ejemplo (después los reemplazarás con datos reales)
+const productos = [
+    {
+        id: 1,
+        name: 'Nombre del producto 1',
+        brand: 'Marca del producto',
+        price: '100',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+        featured: true,
+    },
+    {
+        id: 2,
+        name: 'Nombre del producto 1',
+        brand: 'Marca del producto',
+        price: '100',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+    },
+    {
+        id: 3,
+        name: 'Nombre del producto 1',
+        brand: 'Marca del producto',
+        price: '100',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+    },
+    {
+        id: 4,
+        name: 'Nombre del producto 1',
+        brand: 'Marca del producto',
+        price: '100',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
+    },
+];
+---
+
+<Layout title={`${subcategoryData.label} - ${categoryData.label}`}>
+    <main>
+        <ProductList 
+            client:load
+            products={productos} 
+            title={subcategoryData.label}
+            showFilters={true}
+        />
+    </main>
+</Layout>
