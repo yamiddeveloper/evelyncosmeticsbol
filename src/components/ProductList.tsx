@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import CategoryDropdown from './CategoryDropdown';
 
@@ -7,9 +8,12 @@ interface Product {
     brand?: string;
     description?: string;
     price: string;
+    priceFormatted?: string;
     image: string;
     featured?: boolean;
-    discount?: string;
+    bestSeller?: boolean;
+    onSale?: boolean;
+    backInStock?: boolean;
 }
 
 interface ProductListProps {
@@ -19,12 +23,66 @@ interface ProductListProps {
     categories?: { id: string; label: string }[];
 }
 
+type FilterType = 'none' | 'price' | 'brand';
+
 export default function ProductList({ 
     products, 
     title, 
     showFilters = true, 
     categories = [] 
 }: ProductListProps) {
+    const [activeFilter, setActiveFilter] = useState<FilterType>('none');
+    const [maxPrice, setMaxPrice] = useState<string>('');
+    const [selectedBrand, setSelectedBrand] = useState<string>('');
+
+    // Manejar cambio de precio - desactiva otros filtros
+    const handlePriceChange = (value: string) => {
+        setMaxPrice(value);
+        if (value) {
+            setActiveFilter('price');
+            setSelectedBrand('');
+        } else {
+            setActiveFilter('none');
+        }
+    };
+
+    // Manejar cambio de marca - desactiva otros filtros
+    const handleBrandChange = (value: string) => {
+        setSelectedBrand(value);
+        if (value) {
+            setActiveFilter('brand');
+            setMaxPrice('');
+        } else {
+            setActiveFilter('none');
+        }
+    };
+
+    // Limpiar filtros
+    const clearFilters = () => {
+        setActiveFilter('none');
+        setMaxPrice('');
+        setSelectedBrand('');
+    };
+
+    // Filtrar productos
+    const filteredProducts = useMemo(() => {
+        if (activeFilter === 'none') return products;
+
+        return products.filter(product => {
+            if (activeFilter === 'price' && maxPrice) {
+                const productPrice = parseFloat(product.price);
+                const maxPriceNum = parseFloat(maxPrice);
+                return productPrice <= maxPriceNum;
+            }
+            if (activeFilter === 'brand' && selectedBrand) {
+                return product.brand?.toLowerCase() === selectedBrand.toLowerCase();
+            }
+            return true;
+        });
+    }, [products, activeFilter, maxPrice, selectedBrand]);
+
+    const hasActiveFilter = activeFilter !== 'none';
+
     return (
         <div className="min-h-screen bg-white match:!pt-24 4xs:!pt-24 xs:!pt-24 sm:!pt-24 md:!pt-[3%] lg:!pt-[3%]">
             {/* Filtros */}
@@ -35,18 +93,35 @@ export default function ProductList({
                     transition={{ duration: 0.5 }}
                     className="border-b border-gray-200 !px-4 !py-4 !mt-[7%]"
                 >
-                    <h2 className="text-center text-sm font-medium text-gray-900 !mb-4">Filtros</h2>
+                    <div className="flex items-center justify-between !mb-4">
+                        <h2 className="text-sm font-medium text-gray-900">Filtros</h2>
+                        {hasActiveFilter && (
+                            <button 
+                                onClick={clearFilters}
+                                className="text-xs text-gray-500 hover:text-gray-700 underline"
+                            >
+                                Limpiar filtro
+                            </button>
+                        )}
+                    </div>
                     
-                    <div className="grid grid-cols-2 gap-3 !mb-3">
+                    <div className="grid grid-cols-2 gap-3">
                         {/* Precio Max */}
                         <div>
                             <label className="text-xs text-gray-600 block mb-1">Precio Max</label>
                             <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">Bs</span>
                                 <input 
                                     type="number" 
-                                    className="w-full border border-gray-300 rounded-md !pl-7 !pr-3 !py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-                                    placeholder=""
+                                    value={maxPrice}
+                                    onChange={(e) => handlePriceChange(e.target.value)}
+                                    disabled={activeFilter === 'brand'}
+                                    className={`w-full border rounded-md !pl-8 !pr-3 !py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 ${
+                                        activeFilter === 'brand' 
+                                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                                            : 'border-gray-300 bg-white'
+                                    }`}
+                                    placeholder="Ej: 200"
                                 />
                             </div>
                         </div>
@@ -54,17 +129,59 @@ export default function ProductList({
                         {/* Marca */}
                         <div>
                             <label className="text-xs text-gray-600 block mb-1">Marca</label>
-                            <select className="w-full bg-white border-gray-300 border text-gray-900 rounded-md !px-4 !py-2 text-sm focus:outline-none cursor-pointer">
-                                <option>Seleccionar Marca</option>
-                                <option>Marca 1</option>
-                                <option>Marca 2</option>
-                                <option>Marca 3</option>
+                            <select 
+                                value={selectedBrand}
+                                onChange={(e) => handleBrandChange(e.target.value)}
+                                disabled={activeFilter === 'price'}
+                                className={`w-full border rounded-md !px-4 !py-2 text-sm focus:outline-none cursor-pointer ${
+                                    activeFilter === 'price' 
+                                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                                        : 'bg-white border-gray-300 text-gray-900'
+                                }`}
+                            >
+                                <option value="">Todas las marcas</option>
+                                <option value="Avene">Avene</option>
+                                <option value="Bella Aurora">Bella Aurora</option>
+                                <option value="Bioderma">Bioderma</option>
+                                <option value="Byphasse">Byphasse</option>
+                                <option value="Cerave">Cerave</option>
+                                <option value="Cetaphil">Cetaphil</option>
+                                <option value="Cosrx">Cosrx</option>
+                                <option value="Dove">Dove</option>
+                                <option value="Ecran">Ecran</option>
+                                <option value="Eucerin">Eucerin</option>
+                                <option value="Garnier">Garnier</option>
+                                <option value="Hada Labo">Hada Labo</option>
+                                <option value="Isdin">Isdin</option>
+                                <option value="La Roche Posay">La Roche Posay</option>
+                                <option value="Lactovit">Lactovit</option>
+                                <option value="L'Oréal">L'Oréal</option>
+                                <option value="Missha">Missha</option>
+                                <option value="Neutrogena">Neutrogena</option>
+                                <option value="Nivea">Nivea</option>
+                                <option value="Principia">Principia</option>
+                                <option value="Some By Mi">Some By Mi</option>
+                                <option value="The Ordinary">The Ordinary</option>
+                                <option value="Tocobo">Tocobo</option>
+                                <option value="Uriage">Uriage</option>
+                                <option value="Vichy">Vichy</option>
                             </select>
                         </div>
                     </div>
+
+                    {/* Indicador de filtro activo */}
+                    {hasActiveFilter && (
+                        <div className="!mt-3 text-xs text-gray-500 text-center">
+                            {activeFilter === 'price' && `Mostrando productos hasta Bs ${maxPrice}`}
+                            {activeFilter === 'brand' && `Mostrando productos de ${selectedBrand}`}
+                            {` (${filteredProducts.length} productos)`}
+                        </div>
+                    )}
                     
-                    {/* Categoría */}
-                    <CategoryDropdown />
+                    {/* Acceso rápido a categorías */}
+                    <div className="!mt-3">
+                        <CategoryDropdown />
+                    </div>
                 </motion.div>
             )}
 
@@ -82,7 +199,13 @@ export default function ProductList({
 
             {/* Lista de productos */}
             <div className="flex flex-col">
-                {products.map((product, index) => (
+                {filteredProducts.length === 0 && (
+                    <div className="text-center !py-12 text-gray-500">
+                        <p className="text-lg">No se encontraron productos</p>
+                        <p className="text-sm !mt-2">Intenta con otro filtro</p>
+                    </div>
+                )}
+                {filteredProducts.map((product, index) => (
                     <motion.div 
                         key={product.id}
                         initial={{ opacity: 0, x: -20 }}
@@ -111,7 +234,7 @@ export default function ProductList({
                             <div>
                                 <span className="text-xs text-gray-500 block">{product.brand || product.description || 'Marca del producto'}</span>
                                 <h3 className="text-base font-medium text-gray-900 !mt-0.5">{product.name}</h3>
-                                <p className="text-xl font-medium text-gray-900 !mt-1">${product.price}</p>
+                                <p className="text-xl font-medium text-gray-900 !mt-1">{product.priceFormatted || `BOB ${product.price}`}</p>
                             </div>
                             
                             {/* Botón */}

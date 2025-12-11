@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ProductList from '../../components/ProductList.tsx';
 import { allCategories } from '../../data/categories.js';
+import allProducts from '../../data/products.json';
 
 // Generar rutas estáticas
 export function getStaticPaths() {
@@ -26,38 +27,13 @@ const subcategories = categoryData.subcategories?.map((sub: any) => ({
     label: sub.label 
 })) || [];
 
-// Productos de ejemplo (después los reemplazarás con datos reales)
-const productos = [
-    {
-        id: 1,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: true,
-    },
-    {
-        id: 2,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-    {
-        id: 3,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-    {
-        id: 4,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-];
+// Filtrar productos por marca (el label de la categoría suele ser la marca)
+const categoryLabel = categoryData.label.toLowerCase();
+const productos = allProducts.filter((product: any) => {
+    const productBrand = product.brand?.toLowerCase() || '';
+    const productName = product.name?.toLowerCase() || '';
+    return productBrand.includes(categoryLabel) || productName.includes(categoryLabel);
+});
 ---
 
 <Layout title={categoryData.label}>

@@ -2,6 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import ProductList from '../../../components/ProductList.tsx';
 import { allCategories } from '../../../data/categories.js';
+import allProducts from '../../../data/products.json';
 
 // Generar rutas estáticas para todas las subcategorías
 export function getStaticPaths() {
@@ -41,38 +42,21 @@ if (!subcategoryData) {
     return Astro.redirect('/404');
 }
 
-// Productos de ejemplo (después los reemplazarás con datos reales)
-const productos = [
-    {
-        id: 1,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: true,
-    },
-    {
-        id: 2,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-    {
-        id: 3,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-    {
-        id: 4,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-];
+// Filtrar productos por categoría y subcategoría
+const categoryLabel = categoryData.label.toLowerCase();
+const subcategoryLabel = subcategoryData.label.toLowerCase();
+
+const productos = allProducts.filter((product: any) => {
+    const productName = product.name?.toLowerCase() || '';
+    const productDescription = product.description?.toLowerCase() || '';
+    const productBrand = product.brand?.toLowerCase() || '';
+    
+    // Buscar coincidencias con la categoría o subcategoría
+    const matchesCategory = productBrand.includes(categoryLabel) || productName.includes(categoryLabel);
+    const matchesSubcategory = productName.includes(subcategoryLabel) || productDescription.includes(subcategoryLabel);
+    
+    return matchesCategory || matchesSubcategory;
+});
 ---
 
 <Layout title={`${subcategoryData.label} - ${categoryData.label}`}>

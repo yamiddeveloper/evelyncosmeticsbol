@@ -2,57 +2,19 @@
 import Hero from './Hero.jsx';
 import Section from './Section';
 import SectionCategories from './SectionCategories';
-const objeto_productos =  [
-    {
-        id: 1,
-        name: 'Sérum Facial',
-        description: 'Sérum hidratante con vitamina C',
-        price: '45.00',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-    },
-    {
-        id: 2,
-        name: 'Crema Hidratante',
-        description: 'Crema facial de día',
-        price: '38.00',
-        image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop',
-    },
-    {
-        id: 3,
-        name: 'Aceite Esencial',
-        description: 'Aceite de rosa mosqueta',
-        price: '52.00',
-        image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=400&h=400&fit=crop',
-    },
-    {
-        id: 4,
-        name: 'Mascarilla Facial',
-        description: 'Mascarilla purificante',
-        price: '28.00',
-        image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400&h=400&fit=crop'
-    },
-    {
-        id: 5,
-        name: 'Tónico Facial',
-        description: 'Tónico equilibrante',
-        price: '32.00',
-        image: 'https://images.unsplash.com/photo-1570194065650-d99fb4b38b15?w=400&h=400&fit=crop',
-    },
-    {
-        id: 6,
-        name: 'Contorno de Ojos',
-        description: 'Crema anti-ojeras',
-        price: '55.00',
-        image: 'https://images.unsplash.com/photo-1631730486784-5e7f0d632d59?w=400&h=400&fit=crop'
-    }
-]
+import allProducts from '../data/products.json';
 
+// Filtrar productos por sección
+const destacados = allProducts.filter((p: any) => p.featured === true);
+const masVendidos = allProducts.filter((p: any) => p.bestSeller === true);
+const enOferta = allProducts.filter((p: any) => p.onSale === true);
+const disponibles = allProducts.filter((p: any) => p.backInStock === true);
 ---
 <div class="h-full w-full flex flex-col items-center">
     <Hero client:load />
-    <Section client:load id="destacados" titulo="Destacados" products={objeto_productos} />
-    <Section client:load id="mas-vendidos" titulo="Más Vendidos" products={objeto_productos} />
+    <Section client:load id="destacados" titulo="Destacados" products={destacados} />
+    <Section client:load id="mas-vendidos" titulo="Más Vendidos" products={masVendidos} />
     <SectionCategories client:load id="por-necesidad" titulo="Por Necesidad" />
-    <Section client:load id="en-oferta" titulo="En Oferta" products={objeto_productos} />
-    <Section client:load id="disponible" titulo="Disponible en Stock" products={objeto_productos} />
+    <Section client:load id="en-oferta" titulo="En Oferta" products={enOferta} />
+    <Section client:load id="disponible" titulo="Disponible en Stock" products={disponibles} />
 </div>

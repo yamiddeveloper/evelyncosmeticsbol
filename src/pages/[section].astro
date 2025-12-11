@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ProductList from '../components/ProductList.tsx';
 import { sections, getAllCategoriesFlat } from '../data/categories.js';
+import allProducts from '../data/products.json';
 
 // Generar rutas estáticas
 export function getStaticPaths() {
@@ -20,56 +21,8 @@ if (!sectionConfig) {
     return Astro.redirect('/404');
 }
 
-// Productos de ejemplo (después los reemplazarás con datos reales)
-const productos = [
-    {
-        id: 1,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: true,
-        bestSeller: true,
-        onSale: false,
-        backInStock: false,
-    },
-    {
-        id: 2,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: false,
-        bestSeller: true,
-        onSale: true,
-        backInStock: false,
-    },
-    {
-        id: 3,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: true,
-        bestSeller: false,
-        onSale: false,
-        backInStock: true,
-    },
-    {
-        id: 4,
-        name: 'Nombre del producto 1',
-        brand: 'Marca del producto',
-        price: '100',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop',
-        featured: false,
-        bestSeller: false,
-        onSale: true,
-        backInStock: false,
-    },
-];
-
 // Filtrar productos según la sección
-let filteredProducts = productos;
+let filteredProducts = allProducts;
 let categories: { id: string; label: string }[] = [];
 
 if (sectionConfig.isCategories) {
@@ -78,7 +31,7 @@ if (sectionConfig.isCategories) {
     categories = allCats.map((cat: any) => ({ id: cat.id, label: cat.label }));
 } else {
     // Filtrar productos según el filterKey
-    filteredProducts = productos.filter(product => product[sectionConfig.filterKey as keyof typeof product] === true);
+    filteredProducts = allProducts.filter((product: any) => product[sectionConfig.filterKey] === true);
 }
 ---
 
