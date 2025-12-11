@@ -28,7 +28,8 @@ const {
 } = Astro.props;
 
 const siteURL = Astro.site || new URL(Astro.url.origin);
-const imageURL = new URL(image, siteURL).href;
+// Si la imagen ya es una URL absoluta, usarla directamente; si no, construir la URL completa
+const imageURL = image.startsWith('http') ? image : new URL(image, siteURL).href;
 const siteName = "Evelyn Cosmetics";
 ---
 <!doctype html>
@@ -59,7 +60,7 @@ const siteName = "Evelyn Cosmetics";
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={imageURL} />
 		<meta property="og:image:secure_url" content={imageURL} />
-		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:type" content="image/jpeg" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:alt" content={`${title} - ${siteName}`} />
