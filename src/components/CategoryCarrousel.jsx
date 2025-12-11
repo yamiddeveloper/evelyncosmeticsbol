@@ -8,7 +8,7 @@ const CategoryCard = ({ category, index }) => {
     return (
         <motion.a 
             href={`/categoria/${category.id}`}
-            className="flex-shrink-0 w-[calc(50%-12px)] lg:w-[calc(25%-18px)] flex flex-col items-center gap-3 cursor-pointer"
+            className="flex-shrink-0 w-[calc(50%-6px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-18px)] flex flex-col items-center gap-3 cursor-pointer snap-start"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: visibleIndex * 0.08 }}
@@ -17,7 +17,7 @@ const CategoryCard = ({ category, index }) => {
             whileTap={{ scale: 0.95 }}
         >
             {/* Imagen circular */}
-            <div className="w-full aspect-square max-w-[280px] rounded-full overflow-hidden shadow-lg border-4 border-white">
+            <div className="w-full aspect-square max-w-[280px] rounded-full overflow-hidden">
                 <img 
                     src={category.image} 
                     alt={category.label} 
@@ -88,7 +88,7 @@ const CategoryCarrousel = () => {
             <motion.div 
                 ref={scrollRef}
                 onScroll={handleScroll}
-                className="flex gap-6 overflow-x-auto scrollbar-hide !py-4 !px-4 scroll-smooth"
+                className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}

@@ -6,7 +6,7 @@ const ProductCard = ({ product, id, index }) => {
     const [productClicked, setProductClicked] = useState(false);
     return (
         <motion.div 
-            className="flex-shrink-0 w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm"
+            className="flex-shrink-0 w-[calc(50%-4px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-12px)] overflow-hidden cursor-pointer snap-start"
             initial={{ opacity: 0.4, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -32,11 +32,11 @@ const ProductCard = ({ product, id, index }) => {
                     </span>
                 )}
             </div>
-            <div className="!p-3 md:!p-4 text-center">
-                <h3 className="text-sm md:text-base lg:text-lg font-medium text-gray-800 !mb-1 md:!mb-2 line-clamp-2">{product.name}</h3>
-                <p className="text-base md:text-lg lg:text-xl font-bold text-gray-900 !mb-2 md:!mb-3">${product.price}</p>
-                <motion.button whileTap={{ scale: 0.95 }} className={`w-full text-white font-medium text-sm md:text-base !py-2 md:!py-3 !px-4 md:!px-6 rounded-full transition-colors cursor-pointer ${productClicked ? 'bg-black ' : 'bg-gray-400 hover:bg-gray-600'}`} onClick={() => setProductClicked(!productClicked)}>
-                    {productClicked ? 'Ver carrito' : 'Agregar al carrito'}
+            <div className="!p-2 md:!p-3 text-center">
+                <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 !mb-0.5 md:!mb-1 line-clamp-2 leading-tight">{product.name}</h3>
+                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 !mb-1.5 md:!mb-2">${product.price}</p>
+                <motion.button whileTap={{ scale: 0.95 }} className={`w-full text-white font-medium text-xs md:text-sm !py-1.5 md:!py-2 !px-2 md:!px-4 rounded-lg transition-colors cursor-pointer ${productClicked ? 'bg-black ' : 'bg-gray-400 hover:bg-gray-600'}`} onClick={() => setProductClicked(!productClicked)}>
+                    {productClicked ? 'Ver carrito' : 'Agregar'}
                 </motion.button>
             </div>
         </motion.div>
@@ -100,7 +100,7 @@ const Carrousel = ({ products = [] }) => {
             <motion.div 
                 ref={scrollRef}
                 onScroll={checkScroll}
-                className="flex gap-6 overflow-x-auto overflow-y-visible scrollbar-hide !py-4 !px-4 scroll-smooth"
+                className="flex gap-2 md:gap-4 overflow-x-auto overflow-y-visible scrollbar-hide scroll-smooth snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {products.map((product, index) => (

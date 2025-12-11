@@ -110,17 +110,32 @@ const Header = () => {
                                 {/* Categorías principales */}
                                 {mainCategories.map((category, index) => (
                                     <div key={`main-${index}`}>
-                                        <div 
-                                            className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
-                                            onClick={() => setOpenCategory(openCategory === `main-${index}` ? null : `main-${index}`)}
-                                        >
-                                            <span className="font-medium">{category.label}</span>
-                                            {category.subcategories && category.subcategories.length > 0 && (
-                                                openCategory === `main-${index}` 
-                                                    ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
-                                                    : <FiChevronDown className="h-4 w-4 text-gray-600"/>
-                                            )}
-                                        </div>
+                                        {category.subcategories && category.subcategories.length > 0 ? (
+                                            <div className="flex items-center justify-between !px-4 !py-3 border-b border-gray-100">
+                                                <a 
+                                                    href={`/categoria/${category.id}`}
+                                                    className="flex-1 font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                                                >
+                                                    {category.label}
+                                                </a>
+                                                <div 
+                                                    onClick={() => setOpenCategory(openCategory === `main-${index}` ? null : `main-${index}`)}
+                                                    className="cursor-pointer pl-4"
+                                                >
+                                                    {openCategory === `main-${index}` 
+                                                        ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
+                                                        : <FiChevronDown className="h-4 w-4 text-gray-600"/>
+                                                    }
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <a 
+                                                href={`/categoria/${category.id}`}
+                                                className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
+                                            >
+                                                <span className="font-medium">{category.label}</span>
+                                            </a>
+                                        )}
                                         
                                         {/* Subcategorías */}
                                         {category.subcategories && category.subcategories.length > 0 && openCategory === `main-${index}` && (
@@ -142,17 +157,32 @@ const Header = () => {
                                 {/* Categorías extra (visibles solo si showMore es true) */}
                                 {showMore && extraCategories.map((category, index) => (
                                     <div key={`extra-${index}`}>
-                                        <div 
-                                            className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
-                                            onClick={() => setOpenCategory(openCategory === `extra-${index}` ? null : `extra-${index}`)}
-                                        >
-                                            <span className="font-medium">{category.label}</span>
-                                            {category.subcategories && category.subcategories.length > 0 && (
-                                                openCategory === `extra-${index}` 
-                                                    ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
-                                                    : <FiChevronDown className="h-4 w-4 text-gray-600"/>
-                                            )}
-                                        </div>
+                                        {category.subcategories && category.subcategories.length > 0 ? (
+                                            <div className="flex items-center justify-between !px-4 !py-3 border-b border-gray-100">
+                                                <a 
+                                                    href={`/categoria/${category.id}`}
+                                                    className="flex-1 font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                                                >
+                                                    {category.label}
+                                                </a>
+                                                <div 
+                                                    onClick={() => setOpenCategory(openCategory === `extra-${index}` ? null : `extra-${index}`)}
+                                                    className="cursor-pointer pl-4"
+                                                >
+                                                    {openCategory === `extra-${index}` 
+                                                        ? <FiChevronUp className="h-4 w-4 text-gray-600"/>
+                                                        : <FiChevronDown className="h-4 w-4 text-gray-600"/>
+                                                    }
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <a 
+                                                href={`/categoria/${category.id}`}
+                                                className="flex items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer border-b border-gray-100"
+                                            >
+                                                <span className="font-medium">{category.label}</span>
+                                            </a>
+                                        )}
                                         
                                         {/* Subcategorías */}
                                         {category.subcategories && category.subcategories.length > 0 && openCategory === `extra-${index}` && (
