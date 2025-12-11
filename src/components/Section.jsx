@@ -13,7 +13,7 @@ const Section = ({ id, titulo, products }) => {
             viewport={{ once: true }}
         >
             <motion.h2 
-                className='watch:text-2xl 4xs:text-3xl 3xs:text-3xl 2xs:text-3xl xs:text-3xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-center !mb-6 lg:!mb-8 watch:max-w-[200px]'
+                className='watch:text-2xl 4xs:text-3xl 3xs:text-3xl 2xs:text-3xl xs:text-3xl sm:text-3xl md:text-[2.5rem] lg:text-[2.5rem] font-bold text-center !mb-6 lg:!mb-8 watch:max-w-[200px] md:max-w-[400px] lg:max-w-[600px]'
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -29,7 +29,7 @@ const Section = ({ id, titulo, products }) => {
                 transition={{ delay: 0.4 }}
                 viewport={{ once: true }}
             >
-                <button className='bg-gray-800 hover:bg-gray-900 text-white !px-8 !py-3 rounded-full transition-colors' onClick={() => window.location.href = `/${id}`}>
+                <button className='bg-gray-800 hover:bg-gray-900 text-white !px-8 !py-3 rounded-full transition-colors !cursor-pointer' onClick={() => window.location.href = `/${id}`}>
                     Ver todos
                 </button>
             </motion.div>

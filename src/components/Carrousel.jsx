@@ -6,7 +6,7 @@ const ProductCard = ({ product, id, index }) => {
     const [productClicked, setProductClicked] = useState(false);
     return (
         <motion.div 
-            className="flex-shrink-0 w-[180px] sm:w-[200px] md:w-[240px] lg:w-[280px] xl:w-[320px] 2xl:w-[360px] bg-white rounded-2xl overflow-hidden cursor-pointer"
+            className="flex-shrink-0 w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm"
             initial={{ opacity: 0.4, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -24,7 +24,7 @@ const ProductCard = ({ product, id, index }) => {
                 <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-[180px] sm:h-[200px] md:h-[220px] lg:h-[260px] xl:h-[300px] 2xl:h-[340px] object-cover"
+                    className="w-full aspect-square object-cover"
                 />
                 {product.discount && (
                     <span className="absolute top-4 right-4 bg-pink-200 text-pink-800 text-sm font-semibold !px-3 !py-1 rounded">
@@ -32,7 +32,7 @@ const ProductCard = ({ product, id, index }) => {
                     </span>
                 )}
             </div>
-            <div className="p-3 md:p-4 text-center">
+            <div className="!p-3 md:!p-4 text-center">
                 <h3 className="text-sm md:text-base lg:text-lg font-medium text-gray-800 !mb-1 md:!mb-2 line-clamp-2">{product.name}</h3>
                 <p className="text-base md:text-lg lg:text-xl font-bold text-gray-900 !mb-2 md:!mb-3">${product.price}</p>
                 <motion.button whileTap={{ scale: 0.95 }} className={`w-full text-white font-medium text-sm md:text-base !py-2 md:!py-3 !px-4 md:!px-6 rounded-full transition-colors cursor-pointer ${productClicked ? 'bg-black ' : 'bg-gray-400 hover:bg-gray-600'}`} onClick={() => setProductClicked(!productClicked)}>
@@ -58,7 +58,12 @@ const Carrousel = ({ products = [] }) => {
 
     const scroll = (direction) => {
         if (scrollRef.current) {
-            const scrollAmount = 320;
+            const clientWidth = scrollRef.current.clientWidth;
+            const gap = 24; // gap-6 is 24px
+            // Calculate item width based on viewport width (approximation for scrolling)
+            // Or simpler: scroll by clientWidth (one page)
+            const scrollAmount = clientWidth; 
+            
             scrollRef.current.scrollBy({
                 left: direction === 'left' ? -scrollAmount : scrollAmount,
                 behavior: 'smooth'
@@ -95,7 +100,7 @@ const Carrousel = ({ products = [] }) => {
             <motion.div 
                 ref={scrollRef}
                 onScroll={checkScroll}
-                className="flex gap-4 overflow-x-auto overflow-y-visible scrollbar-hide !py-4 !px-4 scroll-smooth"
+                className="flex gap-6 overflow-x-auto overflow-y-visible scrollbar-hide !py-4 !px-4 scroll-smooth"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {products.map((product, index) => (
