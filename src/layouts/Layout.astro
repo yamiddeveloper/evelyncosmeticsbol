@@ -2,18 +2,90 @@
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+	image?: string;
+	canonicalURL?: string;
+	type?: 'website' | 'article' | 'product';
+	keywords?: string;
+	author?: string;
+	publishedTime?: string;
+	modifiedTime?: string;
+}
+
+const {
+	title,
+	description = "Evelyn Cosmetics - Tu tienda de belleza y cosméticos de alta calidad. Encuentra maquillaje, cuidado de piel, fragancias y más.",
+	image = "/evelyncosmetics.png",
+	canonicalURL = Astro.url.href,
+	type = "website",
+	keywords = "cosméticos, maquillaje, belleza, cuidado de piel, fragancias, Evelyn Cosmetics",
+	author = "Evelyn Cosmetics",
+	publishedTime,
+	modifiedTime,
+} = Astro.props;
+
+const siteURL = Astro.site || new URL(Astro.url.origin);
+const imageURL = new URL(image, siteURL).href;
+const siteName = "Evelyn Cosmetics";
 ---
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/png" href="/evelyncosmetics.png" />
 		<meta name="generator" content={Astro.generator} />
+		
+		<!-- Preconnect para optimización -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<title>EC | {Astro.props.title}</title>
+		
+		<!-- SEO Básico -->
+		<title>{title} | {siteName}</title>
+		<meta name="description" content={description} />
+		<meta name="keywords" content={keywords} />
+		<meta name="author" content={author} />
+		<meta name="robots" content="index, follow" />
+		<link rel="canonical" href={canonicalURL} />
+		
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={`${title} | ${siteName}`} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={imageURL} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:site_name" content={siteName} />
+		<meta property="og:locale" content="es_ES" />
+		{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+		{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+		
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalURL} />
+		<meta name="twitter:title" content={`${title} | ${siteName}`} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={imageURL} />
+		
+		<!-- Tema y colores -->
+		<meta name="theme-color" content="#ec4899" />
+		<meta name="msapplication-TileColor" content="#ec4899" />
+		
+		<!-- Structured Data / JSON-LD -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": siteName,
+			"url": siteURL.href,
+			"logo": imageURL,
+			"description": description,
+			"sameAs": []
+		})} />
 	</head>
 	<body class="">
 		<Header client:load />

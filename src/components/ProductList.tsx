@@ -25,7 +25,7 @@ export default function ProductList({
     categories = [] 
 }: ProductListProps) {
     return (
-        <div className="min-h-screen bg-white match:!pt-24 4xs:!pt-24 xs:!pt-24 sm:!pt-24 md:!pt-9 lg:!pt-9">
+        <div className="min-h-screen bg-white match:!pt-24 4xs:!pt-24 xs:!pt-24 sm:!pt-24 md:!pt-[3%] lg:!pt-[3%]">
             {/* Filtros */}
             {showFilters && (
                 <motion.div 
