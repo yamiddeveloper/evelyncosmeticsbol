@@ -17,11 +17,11 @@ interface Props {
 
 const {
 	title,
-	description = "Evelyn Cosmetics - Tu tienda de belleza y cosméticos de alta calidad. Encuentra maquillaje, cuidado de piel, fragancias y más.",
-	image = "/background.png", // Imagen por defecto de alta calidad (Cosméticos)
+	description = "Tu destino de belleza en Bolivia. Cosméticos de alta calidad ✨",
+	image = "/background.png",
 	canonicalURL = Astro.url.href,
 	type = "website",
-	keywords = "cosméticos, maquillaje, belleza, cuidado de piel, fragancias, Evelyn Cosmetics",
+	keywords = "cosméticos, maquillaje, belleza, cuidado de piel, fragancias, Evelyn Cosmetics, Bolivia",
 	author = "Evelyn Cosmetics",
 	publishedTime,
 	modifiedTime,
@@ -60,7 +60,7 @@ const siteName = "Evelyn Cosmetics";
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={imageURL} />
 		<meta property="og:image:secure_url" content={imageURL} />
-		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta property="og:image:alt" content={`${title} - ${siteName}`} />
