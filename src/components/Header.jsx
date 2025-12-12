@@ -98,7 +98,7 @@ const Header = () => {
                 >
                     <motion.button 
                     whileHover={{ scale: 1.05 }}
-                    className="flex items-center gap-1 hover:text-gray-900 transition-colors font-medium py-2">
+                    className="flex items-center gap-1 hover:text-gray-900 transition-colors font-medium py-2 cursor-pointer">
                         Categorías
                         <FiChevronDown className={`h-4 w-4 transition-transform ${showCategories ? 'rotate-180 transform ease-in-out duration-200' : ''}`}/>
                     </motion.button>
@@ -223,16 +223,25 @@ const Header = () => {
                 >
                     Blog
                 </motion.a>
+                <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    id="cart" 
+                    className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                    onClick={() => abrirCarrito()}
+                >
+                    <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                </motion.div>
             </nav>
-            {/* Cart - único para todas las pantallas */}
+            {/* Cart - solo para pequeñas pantallas */}
             <motion.div 
                 whileHover={{ scale: 1.05 }}
                 id="cart" 
-                className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-6 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
                 onClick={() => abrirCarrito()}
             >
                 <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
             </motion.div>
+        
 
             {/* Mobile menu */}
             {openMenu && (

@@ -112,13 +112,20 @@ export default function CategoryDropdown({ className = '' }: CategoryDropdownPro
                         setExpandedCategory(null);
                     }
                 }}
-                className="w-full flex items-center justify-between bg-gray-800 text-white rounded-md !px-4 !py-2 text-sm focus:outline-none cursor-pointer transition-colors hover:bg-gray-700"
+                className={`flex w-full items-center justify-between !px-4 !py-3 text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors border border-gray-200 ${isOpen ? 'bg-gray-50' : ''}`}
             >
-                <span>Seleccionar categoría</span>
+                <div className="flex items-center gap-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-tag" viewBox="0 0 16 16">
+                        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+                        <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+                    </svg>
+                    <span>Seleccionar categoría</span>
+                </div>
+                
                 {isOpen ? (
-                    <FiChevronUp className="text-white" />
+                    <FiChevronUp className="text-gray-400" />
                 ) : (
-                    <FiChevronDown className="text-white" />
+                    <FiChevronDown className="text-gray-400" />
                 )}
             </button>
 

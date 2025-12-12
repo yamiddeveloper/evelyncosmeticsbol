@@ -232,9 +232,9 @@ export default function ProductList({
                         {/* Info */}
                         <div className="flex-1 flex flex-col justify-between">
                             <div>
-                                <span className="text-xs text-gray-500 block">{product.brand || product.description || 'Marca del producto'}</span>
-                                <h3 className="text-base font-medium text-gray-900 !mt-0.5">{product.name}</h3>
-                                <p className="text-xl font-medium text-gray-900 !mt-1">{product.priceFormatted || `BOB ${product.price}`}</p>
+                                <span className="text-[.9rem] text-gray-500 block">{product.brand || product.description || 'Marca del producto'}</span>
+                                <h3 className="text-[.85rem] font-medium text-gray-900 !mt-0.7">{product.name}</h3>
+                                <p className="text-xl font-medium text-gray-900 !mt-3">{product.priceFormatted || `BOB ${product.price}`}</p>
                             </div>
                             
                             {/* Botón */}
@@ -242,7 +242,7 @@ export default function ProductList({
                                 <motion.button 
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="w-full bg-gray-900 text-white text-sm font-medium !py-2.5 rounded-md !mt-2"
+                                    className="w-full bg-gray-900 text-white text-sm font-medium !py-2.5 rounded-md !mt-2 cursor-pointer"
                                 >
                                     Ver el carrito
                                 </motion.button>
