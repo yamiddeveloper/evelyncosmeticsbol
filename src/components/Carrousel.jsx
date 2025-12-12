@@ -73,7 +73,7 @@ const Carrousel = ({ products = [] }) => {
 
     return (
         <motion.div 
-            className=" relative w-full !px-0 md:!px-10 overflow-visible"
+            className=" relative w-full !px-0 md:!px-10 overflow-y-hidden"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -100,7 +100,7 @@ const Carrousel = ({ products = [] }) => {
             <motion.div 
                 ref={scrollRef}
                 onScroll={checkScroll}
-                className="flex gap-2 md:gap-4 overflow-x-auto overflow-y-visible scrollbar-hide scroll-smooth snap-x snap-mandatory"
+                className="flex gap-2 md:gap-4 overflow-x-auto overflow-y-hidden  scrollbar-hide scroll-smooth snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {products.map((product, index) => (
