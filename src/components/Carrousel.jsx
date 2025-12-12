@@ -3,6 +3,17 @@ import { motion } from 'framer-motion';
 
 const ProductCard = ({ product, id, index }) => {
     const [productClicked, setProductClicked] = useState(false);
+    
+    const handleCardClick = () => {
+        const slug = product.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        window.location.href = `/producto/${slug}`;
+    };
+
+    const handleButtonClick = (e) => {
+        e.stopPropagation();
+        setProductClicked(!productClicked);
+    };
+
     return (
         <motion.div
             className="group flex-shrink-0 w-[calc(50%-4px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-12px)] overflow-hidden cursor-pointer snap-start rounded-lg transition-shadow duration-300 hover:shadow-lg"
@@ -15,6 +26,7 @@ const ProductCard = ({ product, id, index }) => {
             viewport={{ once: true, amount: 0.2 }}
             id={`product-${id}-${index}`}
             key={`${product.id}-${id}-${index}`}
+            onClick={handleCardClick}
         >
             <div className="relative overflow-hidden">
                 <img
@@ -31,8 +43,27 @@ const ProductCard = ({ product, id, index }) => {
             <div className="!p-2 md:!p-3 text-center">
                 <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 !mb-0.5 md:!mb-1 line-clamp-2 leading-tight">{product.name}</h3>
                 <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 !mb-1.5 md:!mb-2">${product.price}</p>
-                <motion.button whileTap={{ scale: 0.95 }} className={`w-full text-white font-medium text-xs md:text-sm !py-1.5 md:!py-2 !px-2 md:!px-4 rounded-lg transition-colors cursor-pointer ${productClicked ? 'bg-black ' : 'bg-gray-400 hover:bg-gray-600'}`} onClick={() => setProductClicked(!productClicked)}>
-                    {productClicked ? 'Ver carrito' : 'Agregar'}
+                <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }} 
+                    className={`w-full text-white font-medium text-xs md:text-sm !py-2 md:!py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${productClicked ? 'bg-gray-900 shadow-md' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
+                    onClick={handleButtonClick}
+                >
+                    {productClicked ? (
+                        <>
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            Ver carrito
+                        </>
+                    ) : (
+                        <>
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Agregar
+                        </>
+                    )}
                 </motion.button>
             </div>
         </motion.div>

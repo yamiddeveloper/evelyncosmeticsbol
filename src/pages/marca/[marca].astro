@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductList from '../../components/ProductList';
+import allProducts from '../../data/products.json';
+
+const { marca } = Astro.params;
+
+// Lista de marcas con sus slugs
+const marcasMap: Record<string, string> = {
+    'avene': 'Avene',
+    'bioderma': 'Bioderma',
+    'cerave': 'Cerave',
+    'cetaphil': 'Cetaphil',
+    'cosrx': 'Cosrx',
+    'dove': 'Dove',
+    'eucerin': 'Eucerin',
+    'garnier': 'Garnier',
+    'isdin': 'Isdin',
+    'la-roche-posay': 'La Roche Posay',
+    'loreal': "L'Oréal",
+    'neutrogena': 'Neutrogena',
+    'nivea': 'Nivea',
+    'the-ordinary': 'The Ordinary',
+    'vichy': 'Vichy',
+    'bella-aurora': 'Bella Aurora',
+    'byphasse': 'Byphasse',
+    'ecran': 'Ecran',
+    'hada-labo': 'Hada Labo',
+    'lactovit': 'Lactovit',
+    'missha': 'Missha',
+    'principia': 'Principia',
+    'some-by-mi': 'Some By Mi',
+    'tocobo': 'Tocobo',
+    'uriage': 'Uriage',
+};
+
+const marcaNombre = marcasMap[marca as string] || marca;
+
+// Filtrar productos por marca
+const productosMarca = allProducts.filter((p: any) => 
+    p.brand?.toLowerCase() === marcaNombre?.toLowerCase()
+);
+
+export function getStaticPaths() {
+    return [
+        { params: { marca: 'avene' } },
+        { params: { marca: 'bioderma' } },
+        { params: { marca: 'cerave' } },
+        { params: { marca: 'cetaphil' } },
+        { params: { marca: 'cosrx' } },
+        { params: { marca: 'dove' } },
+        { params: { marca: 'eucerin' } },
+        { params: { marca: 'garnier' } },
+        { params: { marca: 'isdin' } },
+        { params: { marca: 'la-roche-posay' } },
+        { params: { marca: 'loreal' } },
+        { params: { marca: 'neutrogena' } },
+        { params: { marca: 'nivea' } },
+        { params: { marca: 'the-ordinary' } },
+        { params: { marca: 'vichy' } },
+        { params: { marca: 'bella-aurora' } },
+        { params: { marca: 'byphasse' } },
+        { params: { marca: 'ecran' } },
+        { params: { marca: 'hada-labo' } },
+        { params: { marca: 'lactovit' } },
+        { params: { marca: 'missha' } },
+        { params: { marca: 'principia' } },
+        { params: { marca: 'some-by-mi' } },
+        { params: { marca: 'tocobo' } },
+        { params: { marca: 'uriage' } },
+    ];
+}
+---
+
+<Layout title={`${marcaNombre} | Evelyn Cosmetics`} description={`Productos de ${marcaNombre}`} keywords={`${marcaNombre}, cosméticos, skincare, Bolivia`} author="@yamiddevofic">
+    <ProductList 
+        client:load 
+        products={productosMarca} 
+        title={marcaNombre as string}
+        showFilters={true}
+    />
+</Layout>

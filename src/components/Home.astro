@@ -2,6 +2,7 @@
 import Hero from './Hero.jsx';
 import Section from './Section';
 import SectionCategories from './SectionCategories';
+import SectionMarcas from './SectionMarcas';
 import allProducts from '../data/products.json';
 
 // Filtrar productos por sección
@@ -17,4 +18,5 @@ const disponibles = allProducts.filter((p: any) => p.backInStock === true);
     <SectionCategories client:load id="por-necesidad" titulo="Por Necesidad" />
     <Section client:load id="en-oferta" titulo="En Oferta" products={enOferta} />
     <Section client:load id="disponible" titulo="Disponible en Stock" products={disponibles} />
+    <SectionMarcas client:load />
 </div>

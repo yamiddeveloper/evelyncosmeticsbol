@@ -92,9 +92,63 @@ const siteName = "Evelyn Cosmetics";
 		})} />
 	</head>
 	<body class="">
+		<!-- Loader Global -->
+		<div id="page-loader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-white transition-opacity duration-500">
+			<div class="flex flex-col items-center !gap-4">
+				<div class="relative">
+					<!-- Logo animado -->
+					<img 
+						src="/evelyncosmetics.png" 
+						alt="Evelyn Cosmetics" 
+						class="w-20 h-20 object-contain animate-pulse"
+					/>
+					<!-- Spinner alrededor del logo -->
+					<div class="absolute inset-0 !-m-2">
+						<svg class="w-24 h-24 animate-spin" viewBox="0 0 100 100">
+							<circle 
+								cx="50" 
+								cy="50" 
+								r="45" 
+								fill="none" 
+								stroke="#fce7f3" 
+								stroke-width="4"
+							/>
+							<circle 
+								cx="50" 
+								cy="50" 
+								r="45" 
+								fill="none" 
+								stroke="#ec4899" 
+								stroke-width="4"
+								stroke-linecap="round"
+								stroke-dasharray="70 200"
+							/>
+						</svg>
+					</div>
+				</div>
+				<p class="text-pink-500 font-medium text-sm animate-pulse">Cargando...</p>
+			</div>
+		</div>
+
 		<Header client:load />
 		<slot />
 		<Footer/>
+
+		<script is:inline>
+			// Ocultar loader cuando la página esté completamente cargada
+			window.addEventListener('load', function() {
+				const loader = document.getElementById('page-loader');
+				if (loader) {
+					// Pequeño delay para asegurar que todo esté renderizado
+					setTimeout(() => {
+						loader.style.opacity = '0';
+						setTimeout(() => {
+							loader.style.display = 'none';
+						}, 500);
+					}, 300);
+				}
+			});
+		</script>
 	</body>
 </html>
 
