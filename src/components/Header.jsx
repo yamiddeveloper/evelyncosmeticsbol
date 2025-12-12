@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FiMenu, FiShoppingCart, FiSearch, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import HamburguerMenu from './HamburguerMenu.jsx';
+import Cart from './Cart.jsx';
 import { mainCategories, extraCategories } from '../data/categories.js';
 
 const Header = () => {
@@ -11,6 +12,7 @@ const Header = () => {
     const [showMore, setShowMore] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
+    const [isCartOpen, setIsCartOpen] = useState(false);
     const lastScrollY = useRef(0);
 
     
@@ -46,12 +48,8 @@ const Header = () => {
     }, []);
 
     return (
-        <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: isVisible ? 0 : -200 }}
-        transition={{ duration: 0.3 }}
-    
-        className="bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between fixed top-0 left-0 right-0 z-50">
+        <header 
+        className={`bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             {/* Logo */}
             <motion.div 
             whileHover={{ scale: 1.05 }}
@@ -227,7 +225,7 @@ const Header = () => {
                     whileHover={{ scale: 1.05 }}
                     id="cart" 
                     className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
-                    onClick={() => abrirCarrito()}
+                    onClick={() => setIsCartOpen(true)}
                 >
                     <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
                 </motion.div>
@@ -235,9 +233,9 @@ const Header = () => {
             {/* Cart - solo para pequeñas pantallas */}
             <motion.div 
                 whileHover={{ scale: 1.05 }}
-                id="cart" 
+                id="cart-mobile" 
                 className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
-                onClick={() => abrirCarrito()}
+                onClick={() => setIsCartOpen(true)}
             >
                 <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
             </motion.div>
@@ -247,7 +245,10 @@ const Header = () => {
             {openMenu && (
                 <HamburguerMenu onClose={() => setOpenMenu(false)}/>
             )}
-        </motion.header>
+
+            {/* Cart panel */}
+            <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+        </header>
     );
 };
 

@@ -24,29 +24,17 @@ const SectionMarcas = () => {
     const duplicatedMarcas = [...marcas, ...marcas];
 
     return (
-        <motion.section 
+        <section 
             className='w-full max-w-[2000px] mx-auto !py-12 lg:!py-20 overflow-hidden'
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            viewport={{ once: true, amount: 0.1 }}
         >
-            <motion.h2 
+            <h2 
                 className='text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-center !mb-6 lg:!mb-8 !px-4'
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                viewport={{ once: true }}
             >
                 Marcas
-            </motion.h2>
+            </h2>
             
-            <motion.div 
+            <div 
                 className="relative w-full overflow-hidden"
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                viewport={{ once: true }}
             >
                 <motion.div 
                     className="flex gap-8 md:gap-12 lg:gap-16 !py-5"
@@ -70,8 +58,8 @@ const SectionMarcas = () => {
                         </a>
                     ))}
                 </motion.div>
-            </motion.div>
-        </motion.section>
+            </div>
+        </section>
     );
 };
 

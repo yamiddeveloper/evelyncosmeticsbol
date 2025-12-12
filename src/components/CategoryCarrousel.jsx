@@ -6,15 +6,9 @@ const CategoryCard = ({ category, index }) => {
     // Delay basado en posición visible (0-3 para 4 elementos visibles)
     const visibleIndex = index % 4;
     return (
-        <motion.a 
+        <a 
             href={`/categoria/${category.id}`}
-            className="flex-shrink-0 w-[calc(50%-6px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-18px)] flex flex-col items-center gap-3 cursor-pointer snap-start"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="flex-shrink-0 w-[calc(50%-6px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-18px)] flex flex-col items-center gap-3 cursor-pointer snap-start hover:scale-105 active:scale-95 transition-transform"
         >
             {/* Imagen circular */}
             <div className="w-full aspect-square max-w-[280px] rounded-full overflow-hidden">
@@ -28,7 +22,7 @@ const CategoryCard = ({ category, index }) => {
             <span className="text-xs sm:text-sm md:text-base font-medium text-gray-800 text-center">
                 {category.label}
             </span>
-        </motion.a>
+        </a>
     );
 };
 
@@ -85,20 +79,16 @@ const CategoryCarrousel = () => {
     return (
         <div className="w-full">
             {/* Carrusel */}
-            <motion.div 
+            <div 
                 ref={scrollRef}
                 onScroll={handleScroll}
                 className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide overflow-y-hidden !py-5 scroll-smooth snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                viewport={{ once: true }}
             >
                 {allCategories.map((category, index) => (
                     <CategoryCard key={category.id} category={category} index={index} />
                 ))}
-            </motion.div>
+            </div>
 
             {/* Dots de navegación - solo mostrar si hay más de 1 */}
             {totalDots > 1 && (

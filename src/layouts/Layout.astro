@@ -135,18 +135,36 @@ const siteName = "Evelyn Cosmetics";
 		<Footer/>
 
 		<script is:inline>
-			// Ocultar loader cuando la página esté completamente cargada
-			window.addEventListener('load', function() {
+			// Ocultar loader cuando TODO esté completamente cargado
+			function hideLoader() {
 				const loader = document.getElementById('page-loader');
 				if (loader) {
-					// Pequeño delay para asegurar que todo esté renderizado
+					loader.style.opacity = '0';
 					setTimeout(() => {
-						loader.style.opacity = '0';
-						setTimeout(() => {
-							loader.style.display = 'none';
-						}, 500);
-					}, 300);
+						loader.style.display = 'none';
+					}, 500);
 				}
+			}
+
+			// Esperar a que todas las imágenes estén cargadas
+			function waitForImages() {
+				const images = document.querySelectorAll('img');
+				const imagePromises = Array.from(images).map(img => {
+					if (img.complete) return Promise.resolve();
+					return new Promise(resolve => {
+						img.addEventListener('load', resolve);
+						img.addEventListener('error', resolve);
+					});
+				});
+				return Promise.all(imagePromises);
+			}
+
+			// Esperar a que el DOM esté listo y todas las imágenes cargadas
+			window.addEventListener('load', function() {
+				waitForImages().then(() => {
+					// Delay adicional para asegurar que React/componentes hidratados estén listos
+					setTimeout(hideLoader, 500);
+				});
 			});
 		</script>
 	</body>

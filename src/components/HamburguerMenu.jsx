@@ -5,7 +5,7 @@ import { mainCategories, extraCategories } from '../data/categories.js'
 const ANIMATION_DURATION = 300
 
 // Item de tienda (siempre primero)
-const tiendaItem = { label: 'Tienda', href: '/' }
+const tiendaItem = { label: 'Tienda', href: '/tienda' }
 
 // Items finales (siempre al final)
 const bottomItems = [

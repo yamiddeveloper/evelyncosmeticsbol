@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductListDynamic from '../components/ProductListDynamic';
+---
+
+<Layout title="Tienda | Evelyn Cosmetics" description="Explora todos nuestros productos de skincare y cosmética" keywords="tienda, cosméticos, skincare, Bolivia, productos de belleza" author="@yamiddevofic">
+    <ProductListDynamic 
+        client:load
+        title="Todos los Productos"
+        showFilters={true}
+    />
+</Layout>

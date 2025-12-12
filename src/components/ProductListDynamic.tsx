@@ -1,33 +1,27 @@
-import { useState, useMemo, useCallback, useEffect, useRef, memo, startTransition } from 'react';
+import { useState, useCallback, useEffect, useRef, memo } from 'react';
 import CategoryDropdown from './CategoryDropdown';
 
 interface Product {
     id: number;
     name: string;
     brand?: string;
-    description?: string;
     price: string;
     priceFormatted?: string;
     image: string;
     featured?: boolean;
-    bestSeller?: boolean;
-    onSale?: boolean;
-    backInStock?: boolean;
 }
 
-interface ProductListProps {
-    products: Product[];
+interface ProductListDynamicProps {
     title: string;
     showFilters?: boolean;
-    categories?: { id: string; label: string }[];
+    initialProducts?: Product[];
 }
 
 type FilterType = 'none' | 'price' | 'brand';
 
-const ITEMS_PER_PAGE = 20;
-const LOAD_MORE_COUNT = 15;
+const ITEMS_PER_PAGE = 30;
 
-// Componente de producto memoizado
+// Componente de producto memoizado y simplificado
 const ProductCard = memo(({ 
     product, 
     isInCart, 
@@ -44,7 +38,7 @@ const ProductCard = memo(({
                 alt={product.name}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-lg bg-gray-100"
             />
             {product.featured && (
                 <span className="absolute top-1 left-1 bg-gray-900 text-white w-5 h-5 rounded-full flex items-center justify-center">
@@ -57,7 +51,7 @@ const ProductCard = memo(({
         
         <div className="flex-1 flex flex-col justify-between">
             <div>
-                <span className="text-[.9rem] text-gray-500 block">{product.brand || product.description || 'Marca del producto'}</span>
+                <span className="text-[.9rem] text-gray-500 block">{product.brand || 'Marca del producto'}</span>
                 <h3 className="text-[.85rem] font-medium text-gray-900 !mt-0.5">{product.name}</h3>
                 <p className="text-xl font-medium text-gray-900 !mt-3">{product.priceFormatted || `BOB ${product.price}`}</p>
             </div>
@@ -92,18 +86,113 @@ const ProductCard = memo(({
 
 ProductCard.displayName = 'ProductCard';
 
-export default function ProductList({ 
-    products, 
+// Skeleton loader para productos
+const ProductSkeleton = () => (
+    <div className="flex gap-4 !px-4 !py-4 border-b border-gray-100 animate-pulse">
+        <div className="w-28 h-28 shrink-0 bg-gray-200 rounded-lg" />
+        <div className="flex-1 flex flex-col justify-between">
+            <div>
+                <div className="h-4 bg-gray-200 rounded w-20 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-full mb-1" />
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-3" />
+                <div className="h-6 bg-gray-200 rounded w-24" />
+            </div>
+            <div className="h-10 bg-gray-200 rounded-full !mt-3" />
+        </div>
+    </div>
+);
+
+export default function ProductListDynamic({ 
     title, 
-    showFilters = true, 
-    categories = [] 
-}: ProductListProps) {
+    showFilters = true,
+    initialProducts = []
+}: ProductListDynamicProps) {
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [loading, setLoading] = useState(initialProducts.length === 0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [total, setTotal] = useState(0);
+    
     const [activeFilter, setActiveFilter] = useState<FilterType>('none');
     const [maxPrice, setMaxPrice] = useState<string>('');
     const [selectedBrand, setSelectedBrand] = useState<string>('');
     const [addedToCart, setAddedToCart] = useState<Set<number>>(new Set());
-    const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+    
     const loaderRef = useRef<HTMLDivElement>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    // Cache de todos los productos
+    const allProductsRef = useRef<Product[]>([]);
+
+    // Función para cargar productos
+    const fetchProducts = useCallback(async (pageNum: number, reset: boolean = false) => {
+        // Cancelar petición anterior si existe
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        abortControllerRef.current = new AbortController();
+
+        const isFirstLoad = reset || pageNum === 1;
+        if (isFirstLoad) {
+            setLoading(true);
+        } else {
+            setLoadingMore(true);
+        }
+
+        try {
+            // Cargar todos los productos solo una vez
+            if (allProductsRef.current.length === 0) {
+                const response = await fetch('/products-lite.json', {
+                    signal: abortControllerRef.current.signal
+                });
+                allProductsRef.current = await response.json();
+            }
+
+            // Filtrar en cliente
+            let filtered = allProductsRef.current;
+            
+            if (selectedBrand) {
+                filtered = filtered.filter(p => 
+                    p.brand?.toLowerCase() === selectedBrand.toLowerCase()
+                );
+            }
+            
+            if (maxPrice) {
+                const max = parseFloat(maxPrice);
+                filtered = filtered.filter(p => parseFloat(p.price) <= max);
+            }
+
+            const totalFiltered = filtered.length;
+            const start = (pageNum - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageProducts = filtered.slice(start, end);
+            
+            setProducts(prev => reset ? pageProducts : [...prev, ...pageProducts]);
+            setHasMore(end < totalFiltered);
+            setTotal(totalFiltered);
+            setPage(pageNum);
+        } catch (error: any) {
+            if (error.name !== 'AbortError') {
+                console.error('Error fetching products:', error);
+            }
+        } finally {
+            setLoading(false);
+            setLoadingMore(false);
+        }
+    }, [selectedBrand, maxPrice]);
+
+    // Cargar productos iniciales
+    useEffect(() => {
+        if (initialProducts.length === 0) {
+            fetchProducts(1, true);
+        }
+    }, []);
+
+    // Recargar cuando cambian los filtros
+    useEffect(() => {
+        fetchProducts(1, true);
+    }, [selectedBrand, maxPrice]);
 
     // Toggle producto en carrito
     const toggleCart = useCallback((productId: number) => {
@@ -118,7 +207,7 @@ export default function ProductList({
         });
     }, []);
 
-    // Manejar cambio de precio - desactiva otros filtros
+    // Manejar cambio de precio
     const handlePriceChange = (value: string) => {
         setMaxPrice(value);
         if (value) {
@@ -129,7 +218,7 @@ export default function ProductList({
         }
     };
 
-    // Manejar cambio de marca - desactiva otros filtros
+    // Manejar cambio de marca
     const handleBrandChange = (value: string) => {
         setSelectedBrand(value);
         if (value) {
@@ -147,55 +236,23 @@ export default function ProductList({
         setSelectedBrand('');
     };
 
-
-    // Filtrar productos
-    const filteredProducts = useMemo(() => {
-        if (activeFilter === 'none') return products;
-
-        return products.filter(product => {
-            if (activeFilter === 'price' && maxPrice) {
-                const productPrice = parseFloat(product.price);
-                const maxPriceNum = parseFloat(maxPrice);
-                return productPrice <= maxPriceNum;
-            }
-            if (activeFilter === 'brand' && selectedBrand) {
-                return product.brand?.toLowerCase() === selectedBrand.toLowerCase();
-            }
-            return true;
-        });
-    }, [products, activeFilter, maxPrice, selectedBrand]);
-
-    // Productos visibles (paginados)
-    const visibleProducts = useMemo(() => {
-        return filteredProducts.slice(0, visibleCount);
-    }, [filteredProducts, visibleCount]);
-
-    const hasMore = visibleCount < filteredProducts.length;
-
-    // Reset visible count cuando cambian los filtros
-    useEffect(() => {
-        setVisibleCount(ITEMS_PER_PAGE);
-    }, [activeFilter, maxPrice, selectedBrand]);
-
-    // Infinite scroll con IntersectionObserver - carga anticipada
+    // Infinite scroll
     useEffect(() => {
         const loader = loaderRef.current;
-        if (!loader || !hasMore) return;
+        if (!loader || !hasMore || loading || loadingMore) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting) {
-                    startTransition(() => {
-                        setVisibleCount(prev => Math.min(prev + LOAD_MORE_COUNT, filteredProducts.length));
-                    });
+                if (entries[0].isIntersecting && hasMore && !loadingMore) {
+                    fetchProducts(page + 1, false);
                 }
             },
-            { threshold: 0, rootMargin: '300px' } // Cargar antes de llegar al final
+            { threshold: 0, rootMargin: '400px' }
         );
 
         observer.observe(loader);
         return () => observer.disconnect();
-    }, [hasMore, filteredProducts.length]);
+    }, [hasMore, loading, loadingMore, page, fetchProducts]);
 
     const hasActiveFilter = activeFilter !== 'none';
 
@@ -203,9 +260,7 @@ export default function ProductList({
         <div className="min-h-screen bg-white match:!pt-24 4xs:!pt-24 xs:!pt-24 sm:!pt-24 md:!pt-[3%] lg:!pt-[3%]">
             {/* Filtros */}
             {showFilters && (
-                <div 
-                    className="border-b border-gray-200 !px-4 !py-4 !mt-[7%]"
-                >
+                <div className="border-b border-gray-200 !px-4 !py-4 !mt-[7%]">
                     <div className="flex items-center justify-between !mb-4">
                         <h2 className="text-sm font-medium text-gray-900">Filtros</h2>
                         {hasActiveFilter && (
@@ -283,11 +338,11 @@ export default function ProductList({
                     </div>
 
                     {/* Indicador de filtro activo */}
-                    {hasActiveFilter && (
+                    {hasActiveFilter && !loading && (
                         <div className="!mt-3 text-xs text-gray-500 text-center">
                             {activeFilter === 'price' && `Mostrando productos hasta Bs ${maxPrice}`}
                             {activeFilter === 'brand' && `Mostrando productos de ${selectedBrand}`}
-                            {` (${filteredProducts.length} productos)`}
+                            {` (${total} productos)`}
                         </div>
                     )}
                     
@@ -299,9 +354,7 @@ export default function ProductList({
             )}
 
             {/* Título de sección */}
-            <div 
-                className="!px-4 !pb-5 !mt-6"
-            >
+            <div className="!px-4 !pb-5 !mt-6">
                 <h1 className="text-2xl md:text-3xl text-center text-gray-900">
                     {title}
                 </h1>
@@ -309,13 +362,20 @@ export default function ProductList({
 
             {/* Lista de productos */}
             <div className="flex flex-col">
-                {filteredProducts.length === 0 ? (
+                {loading ? (
+                    // Skeleton loaders durante carga inicial
+                    <>
+                        {[...Array(6)].map((_, i) => (
+                            <ProductSkeleton key={i} />
+                        ))}
+                    </>
+                ) : products.length === 0 ? (
                     <div className="text-center !py-12 text-gray-500">
                         <p className="text-lg">No se encontraron productos</p>
                         <p className="text-sm !mt-2">Intenta con otro filtro</p>
                     </div>
                 ) : (
-                    visibleProducts.map((product) => (
+                    products.map((product) => (
                         <ProductCard
                             key={product.id}
                             product={product}
@@ -326,18 +386,20 @@ export default function ProductList({
                 )}
                 
                 {/* Trigger para infinite scroll */}
-                {hasMore && (
+                {hasMore && !loading && (
                     <div ref={loaderRef} className="flex justify-center !py-6">
-                        <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                        {loadingMore && (
+                            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                        )}
                     </div>
                 )}
                 
                 {/* Contador de productos */}
-                {filteredProducts.length > 0 && (
+                {!loading && products.length > 0 && (
                     <div className="text-center !py-4 text-sm text-gray-500">
                         {hasMore 
-                            ? `Mostrando ${visibleProducts.length} de ${filteredProducts.length} productos`
-                            : `${filteredProducts.length} productos`
+                            ? `Mostrando ${products.length} de ${total} productos`
+                            : `${total} productos`
                         }
                     </div>
                 )}
