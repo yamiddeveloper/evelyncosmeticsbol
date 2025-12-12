@@ -5,25 +5,22 @@ const ProductCard = ({ product, id, index }) => {
     const [productClicked, setProductClicked] = useState(false);
     return (
         <motion.div
-            className="flex-shrink-0 w-[calc(50%-4px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-12px)] overflow-hidden cursor-pointer snap-start"
-            initial={{ opacity: 0.4, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            className="group flex-shrink-0 w-[calc(50%-4px)] md:w-[calc(33.333%-10px)] lg:w-[calc(25%-12px)] overflow-hidden cursor-pointer snap-start rounded-lg transition-shadow duration-300 hover:shadow-lg"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{
-                duration: 0.3,
+                duration: 0.4,
                 ease: "easeOut"
             }}
-            viewport={{ once: false, amount: 0.5 }}
-            whileHover={{
-                scale: 1.03,
-            }}
+            viewport={{ once: true, amount: 0.2 }}
             id={`product-${id}-${index}`}
             key={`${product.id}-${id}-${index}`}
         >
-            <div className="relative">
+            <div className="relative overflow-hidden">
                 <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full aspect-square object-cover"
+                    className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {product.discount && (
                     <span className="absolute top-4 right-4 bg-pink-200 text-pink-800 text-sm font-semibold !px-3 !py-1 rounded">

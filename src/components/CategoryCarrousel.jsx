@@ -9,10 +9,10 @@ const CategoryCard = ({ category, index }) => {
         <motion.a 
             href={`/categoria/${category.id}`}
             className="flex-shrink-0 w-[calc(50%-6px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-18px)] flex flex-col items-center gap-3 cursor-pointer snap-start"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: visibleIndex * 0.08 }}
-            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.2 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
         >
