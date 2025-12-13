@@ -19,7 +19,7 @@ interface ProductListDynamicProps {
 
 type FilterType = 'none' | 'price' | 'brand';
 
-const ITEMS_PER_PAGE = 30;
+const ITEMS_PER_PAGE = 12;
 
 // Componente de producto memoizado y simplificado
 const ProductCard = memo(({ 

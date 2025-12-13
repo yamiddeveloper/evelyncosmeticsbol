@@ -259,7 +259,7 @@ const Header = () => {
                     <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
                     {$cartCount > 0 && (
                         <span className="text-sm font-medium text-gray-700 hidden lg:inline">
-                            Bs {$cartTotal.toFixed(2)}
+                            Bs {Math.round($cartTotal)}
                         </span>
                     )}
                     {$cartCount > 0 && (
@@ -280,7 +280,7 @@ const Header = () => {
                 {$cartCount > 0 && (
                     <>
                         <span className="text-sm font-medium text-gray-700">
-                            Bs {$cartTotal.toFixed(2)}
+                            Bs {Math.round($cartTotal)}
                         </span>
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
                             {$cartCount}

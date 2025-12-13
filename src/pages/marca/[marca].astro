@@ -85,7 +85,7 @@ export function getStaticPaths() {
 
 <Layout title={`${marcaNombre} | Evelyn Cosmetics`} description={`Productos de ${marcaNombre}`} keywords={`${marcaNombre}, cosméticos, skincare, Bolivia`} author="@yamiddevofic">
     <ProductList 
-        client:idle 
+        client:load 
         products={productosMarca} 
         title={marcaNombre as string}
         showFilters={true}

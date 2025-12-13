@@ -1,5 +1,5 @@
 ---
-import Hero from './Hero.jsx';
+import Banner from './Banner.jsx';
 import Section from './Section';
 import SectionCategories from './SectionCategories';
 import SectionMarcas from './SectionMarcas';
@@ -12,7 +12,7 @@ const enOferta = allProducts.filter((p: any) => p.onSale === true);
 const disponibles = allProducts.filter((p: any) => p.backInStock === true);
 ---
 <div class="h-full w-full flex flex-col items-center">
-    <Hero client:load />
+    <Banner client:load />
     <Section client:load id="destacados" titulo="Destacados" products={destacados} />
     <Section client:load id="mas-vendidos" titulo="Más Vendidos" products={masVendidos} />
     <SectionCategories client:load id="por-necesidad" titulo="Por Necesidad" />

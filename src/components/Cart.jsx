@@ -137,15 +137,15 @@ const Cart = ({ isOpen, onClose }) => {
                             <div className="space-y-2 !mb-4">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">Ahorro</span>
-                                    <span className="text-gray-900">Bs {ahorro.toFixed(2)}</span>
+                                    <span className="text-gray-900">Bs {Math.round(ahorro)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm !mt-2">
                                     <span className="text-gray-600">Total productos ({totalProducts})</span>
-                                    <span className="text-gray-900">Bs {subtotal.toFixed(2)}</span>
+                                    <span className="text-gray-900">Bs {Math.round(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between text-lg font-semibold !pt-2 border-t border-gray-100 py-2">
                                     <span>Subtotal</span>
-                                    <span>Bs {subtotal.toFixed(2)}</span>
+                                    <span>Bs {Math.round(subtotal)}</span>
                                 </div>
                             </div>
 

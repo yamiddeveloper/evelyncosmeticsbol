@@ -26,8 +26,8 @@ interface ProductListProps {
 
 type FilterType = 'none' | 'price' | 'brand';
 
-const ITEMS_PER_PAGE = 20;
-const LOAD_MORE_COUNT = 15;
+const ITEMS_PER_PAGE = 12;
+const LOAD_MORE_COUNT = 12;
 
 // Componente de producto memoizado
 const ProductCard = memo(({ 

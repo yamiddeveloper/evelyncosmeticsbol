@@ -52,7 +52,7 @@ const productos = allProducts
 <Layout title={categoryData.label}>
     <main>
         <ProductList 
-            client:idle
+            client:load
             products={productos} 
             title={categoryData.label}
             showFilters={true}
