@@ -68,36 +68,36 @@ const Header = () => {
 
     return (
         <header 
-        className={`bg-white w-full !px-2 !py-2 lg:!px-6 lg:!py-3 border-b-2 border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+        className={`bg-white w-full !px-2 !py-1 lg:!px-6 lg:!py-3 border-b border-gray-200 flex flex-wrap lg:flex-nowrap items-center justify-between fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             {/* Logo */}
             <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            id="logo" onClick={() => window.location.href = "/"} className="order-2 lg:order-1 w-auto flex items-center justify-center absolute top-2 left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 cursor-pointer">
-                <img src="/evelyncosmetics.png" className="w-15 h-15 lg:w-16 lg:h-16" alt="Evelyn Cosmetics" />
+            id="logo" onClick={() => window.location.href = "/"} className="order-2 lg:order-1 w-auto flex items-center justify-center absolute top-1 left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 cursor-pointer">
+                <img src="/evelyncosmetics.png" className="w-10 h-10 lg:w-16 lg:h-16" alt="Evelyn Cosmetics" />
             </motion.div>
 
             {/* Hamburger menu - mobile only */}
             <motion.div 
                 whileHover={{ scale: 1.05 }}
                 id="menu" 
-                className="order-1 rounded-full !p-2 duration-300 flex lg:hidden justify-center cursor-pointer" 
+                className="order-1 rounded-full !p-1 duration-300 flex lg:hidden justify-center cursor-pointer" 
                 onClick={() => setOpenMenu(!openMenu)}
             >
-                <FiMenu className='h-10 w-10'/>
+                <FiMenu className='h-7 w-7'/>
             </motion.div>
 
             {/* Search bar */}
             <motion.div 
             whileHover={{ scale: 1.02 }}
-            id="search" className="order-4 lg:order-2 !mt-2 lg:!mt-0 relative w-full lg:w-[100vh] lg:flex-1 lg:max-w-lg lg:!mx-8">
+            id="search" className="order-4 lg:order-2 !mt-1.5 lg:!mt-0 relative w-full lg:w-[100vh] lg:flex-1 lg:max-w-lg lg:!mx-8">
                 <input 
                     type="text" 
                     placeholder="Buscar productos..." 
-                    className="w-full h-12 border-2 border-gray-200 rounded-full !pl-4 !pr-10 outline-none focus:border-gray-400 transition-colors"
+                    className="w-full h-9 lg:h-12 text-sm lg:text-base border border-gray-200 rounded-full !pl-3 lg:!pl-4 !pr-9 lg:!pr-10 outline-none focus:border-gray-400 transition-colors"
                 />
                 <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                    <FiSearch className="h-6 w-6 cursor-pointer"/>
+                    <FiSearch className="h-5 w-5 lg:h-6 lg:w-6 cursor-pointer"/>
                 </button>
             </motion.div>
 
@@ -273,16 +273,16 @@ const Header = () => {
             <motion.div 
                 whileHover={{ scale: 1.05 }}
                 id="cart-mobile" 
-                className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300 relative" 
+                className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-1 lg:!mr-0 lg:!ml-2 cursor-pointer !p-1 rounded-full hover:shadow-lg transition-all duration-300 relative" 
                 onClick={() => setIsCartOpen(true)}
             >
-                <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                <FiShoppingCart className='h-6 w-6 lg:h-6 lg:w-6'/>
                 {$cartCount > 0 && (
                     <>
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-xs font-medium text-gray-700">
                             Bs {Math.round($cartTotal)}
                         </span>
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                        <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
                             {$cartCount}
                         </span>
                     </>

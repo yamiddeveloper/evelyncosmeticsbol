@@ -19,7 +19,7 @@ const CategoryCard = ({ category, index }) => {
                 />
             </div>
             {/* Nombre de categoría */}
-            <span className="text-xs sm:text-sm md:text-base font-medium text-gray-800 text-center">
+            <span className="text-[10px] sm:text-sm md:text-base font-medium text-gray-800 text-center">
                 {category.label}
             </span>
         </a>
@@ -82,7 +82,7 @@ const CategoryCarrousel = () => {
             <div 
                 ref={scrollRef}
                 onScroll={handleScroll}
-                className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide overflow-y-hidden !py-5 scroll-smooth snap-x snap-mandatory"
+                className="flex gap-2 md:gap-6 overflow-x-auto scrollbar-hide overflow-y-hidden !py-2 md:!py-5 scroll-smooth snap-x snap-mandatory"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {allCategories.map((category, index) => (
@@ -92,7 +92,7 @@ const CategoryCarrousel = () => {
 
             {/* Dots de navegación - solo mostrar si hay más de 1 */}
             {totalDots > 1 && (
-                <div className="flex justify-center gap-2 !mt-4 overflow">
+                <div className="flex justify-center gap-1.5 !mt-2 md:!mt-4 overflow">
                     {Array.from({ length: totalDots }).map((_, index) => (
                         <button
                             key={index}

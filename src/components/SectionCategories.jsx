@@ -6,10 +6,10 @@ const SectionCategories = ({ id, titulo }) => {
     return (
         <section 
             id={id} 
-            className='w-full max-w-[2000px] mx-auto !px-4 md:!px-8 lg:!px-12 !py-8 lg:!py-12'
+            className='w-full max-w-[2000px] mx-auto !px-2 md:!px-8 lg:!px-12 !py-4 md:!py-6 lg:!py-12'
         >
             <h2 
-                className='text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-center !mb-6 lg:!mb-8'
+                className='text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold text-center !mb-3 md:!mb-5 lg:!mb-8'
             >
                 {titulo}
             </h2>

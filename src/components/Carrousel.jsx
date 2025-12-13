@@ -28,30 +28,30 @@ const ProductCard = ({ product, id, index, isInCart, onAddToCart }) => {
                     className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {product.discount && (
-                    <span className="absolute top-4 right-4 bg-pink-200 text-pink-800 text-sm font-semibold !px-3 !py-1 rounded">
+                    <span className="absolute top-2 right-2 md:top-4 md:right-4 bg-pink-200 text-pink-800 text-[10px] md:text-sm font-semibold !px-1.5 md:!px-3 !py-0.5 md:!py-1 rounded">
                         {product.discount}
                     </span>
                 )}
             </div>
-            <div className="!p-2 md:!p-3 text-center">
-                <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 !mb-0.5 md:!mb-1 line-clamp-2 leading-tight">{product.name}</h3>
-                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 !mb-1.5 md:!mb-2">Bs {product.price}</p>
+            <div className="!p-1 md:!p-3 text-center">
+                <h3 className="text-[9px] sm:text-[10px] md:text-sm lg:text-base font-medium text-gray-800 !mb-0.5 line-clamp-2 leading-tight">{product.name}</h3>
+                <p className="text-[10px] sm:text-xs md:text-base lg:text-lg font-bold text-gray-900 !mb-0.5 md:!mb-2">Bs {product.price}</p>
                 <motion.button 
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }} 
-                    className={`w-full h-[45px] text-white font-medium text-xs md:text-sm !py-2 md:!py-2.5 rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-1.5 ${isInCart ? 'bg-gray-900 shadow-md hover:bg-gray-800' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
+                    className={`w-full h-[28px] sm:h-[32px] md:h-[45px] text-white font-medium text-[9px] sm:text-[10px] md:text-sm !py-1 md:!py-2.5 rounded-[16px] md:rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-0.5 md:gap-1.5 ${isInCart ? 'bg-gray-900 shadow-md hover:bg-gray-800' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
                     onClick={handleButtonClick}
                 >
                     {isInCart ? (
                         <>
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
-                            Ver carrito
+                            <span className="hidden sm:inline">Ver</span> carrito
                         </>
                     ) : (
                         <>
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
                             Agregar
@@ -141,10 +141,10 @@ const Carrousel = ({ products = [] }) => {
             {canScrollLeft && (
                 <button
                     onClick={() => scroll('left')}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full !p-2 hover:bg-white hover:scale-110 active:scale-90 transition-all cursor-pointer"
+                    className="absolute left-1 md:left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full !p-1 md:!p-2 hover:bg-white hover:scale-110 active:scale-90 transition-all cursor-pointer"
                     aria-label="Anterior"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-6 md:w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
@@ -153,10 +153,10 @@ const Carrousel = ({ products = [] }) => {
             {canScrollRight && (
                 <button
                     onClick={() => scroll('right')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full cursor-pointer !p-2 hover:bg-white hover:scale-110 active:scale-90 transition-all"
+                    className="absolute right-1 md:right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full cursor-pointer !p-1 md:!p-2 hover:bg-white hover:scale-110 active:scale-90 transition-all"
                     aria-label="Siguiente"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-6 md:w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
