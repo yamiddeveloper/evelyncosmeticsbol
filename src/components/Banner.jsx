@@ -5,7 +5,7 @@ const banners = [
         image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1920&h=600&fit=crop&q=90',
         title: 'NUEVA COLECCIÓN',
         subtitle: 'Descubre lo último en belleza',
-        accent: '2024'
+        accent: '2026'
     },
     {
         image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=1920&h=600&fit=crop&q=90',
