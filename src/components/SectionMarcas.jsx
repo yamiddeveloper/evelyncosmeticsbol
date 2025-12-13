@@ -28,7 +28,7 @@ const SectionMarcas = () => {
             className='w-full max-w-[2000px] mx-auto !py-4 md:!py-8 lg:!py-20 overflow-hidden'
         >
             <h2 
-                className='text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold text-center !mb-3 md:!mb-5 lg:!mb-8 !px-2'
+                className='text-[1.6rem] sm:text-[1.6rem] md:text-2xl lg:text-[2.5rem] font-semibold text-center !mb-3 md:!mb-5 lg:!mb-8 !px-2'
             >
                 Marcas
             </h2>

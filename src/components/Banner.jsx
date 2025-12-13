@@ -42,7 +42,7 @@ const Banner = () => {
     };
 
     return (
-        <div className="!mt-[28%] lg:!mt-[10%] !px-3 sm:!px-4 md:!px-6 lg:!px-8 xl:!px-12">
+        <div className="!mt-[28%] lg:!mt-[10%] !mb-[5%] md:!mb-[2%] lg:!mb-[2%] !px-3 sm:!px-4 md:!px-6 lg:!px-8 xl:!px-12">
             <div className="relative w-full max-w-7xl !mx-auto overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl">
                 {/* Banner Image */}
                 <div className="relative group">
