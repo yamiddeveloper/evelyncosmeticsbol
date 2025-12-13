@@ -16,6 +16,14 @@ const HamburguerMenu = ({ onClose }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [openCategory, setOpenCategory] = useState(null)
   const [showMore, setShowMore] = useState(false)
+  const [currentPath, setCurrentPath] = useState('')
+
+  // Detectar página actual
+  useEffect(() => {
+    setCurrentPath(window.location.pathname)
+  }, [])
+
+  const isActive = (path) => currentPath === path || currentPath.startsWith(path + '/')
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -68,9 +76,18 @@ const HamburguerMenu = ({ onClose }) => {
           {/* Tienda */}
           <a 
             href={tiendaItem.href}
-            className="flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
+            className={`flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer ${
+              isActive('/tienda') 
+                ? 'bg-gray-900 text-white' 
+                : 'hover:bg-gray-50'
+            }`}
           >
-            <span className="text-base font-medium text-gray-800">{tiendaItem.label}</span>
+            <span className={`text-base font-medium ${isActive('/tienda') ? 'text-white' : 'text-gray-800'}`}>
+              {tiendaItem.label}
+            </span>
+            {isActive('/tienda') && (
+              <span className="text-xs bg-white text-gray-900 !px-2 !py-0.5 rounded-full">Aquí</span>
+            )}
           </a>
 
           {/* Categorías principales */}
@@ -182,9 +199,18 @@ const HamburguerMenu = ({ onClose }) => {
             <a 
               key={`bottom-${index}`}
               href={item.href}
-              className="flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50"
+              className={`flex items-center justify-between !px-4 !py-3 border-b border-gray-200 cursor-pointer ${
+                isActive(item.href) 
+                  ? 'bg-gray-900 text-white' 
+                  : 'hover:bg-gray-50'
+              }`}
             >
-              <span className="text-base font-medium text-gray-800">{item.label}</span>
+              <span className={`text-base font-medium ${isActive(item.href) ? 'text-white' : 'text-gray-800'}`}>
+                {item.label}
+              </span>
+              {isActive(item.href) && (
+                <span className="text-xs bg-white text-gray-900 !px-2 !py-0.5 rounded-full">Aquí</span>
+              )}
             </a>
           ))}
         </nav>

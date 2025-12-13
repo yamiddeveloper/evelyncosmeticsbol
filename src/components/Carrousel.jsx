@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { useStore } from '@nanostores/react';
 import { motion } from 'framer-motion';
+import { cartItems, addToCart } from '../stores/cartStore';
 
-const ProductCard = ({ product, id, index }) => {
-    const [productClicked, setProductClicked] = useState(false);
-    
+const ProductCard = ({ product, id, index, isInCart, onAddToCart }) => {
     const handleCardClick = () => {
         const slug = product.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         window.location.href = `/producto/${slug}`;
@@ -11,7 +11,7 @@ const ProductCard = ({ product, id, index }) => {
 
     const handleButtonClick = (e) => {
         e.stopPropagation();
-        setProductClicked(!productClicked);
+        onAddToCart(product);
     };
 
     return (
@@ -35,14 +35,14 @@ const ProductCard = ({ product, id, index }) => {
             </div>
             <div className="!p-2 md:!p-3 text-center">
                 <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 !mb-0.5 md:!mb-1 line-clamp-2 leading-tight">{product.name}</h3>
-                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 !mb-1.5 md:!mb-2">${product.price}</p>
+                <p className="text-sm md:text-base lg:text-lg font-bold text-gray-900 !mb-1.5 md:!mb-2">Bs {product.price}</p>
                 <motion.button 
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }} 
-                    className={`w-full h-[45px] text-white font-medium text-xs md:text-sm !py-2 md:!py-2.5 rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-1.5 ${productClicked ? 'bg-gray-900 shadow-md' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
+                    className={`w-full h-[45px] text-white font-medium text-xs md:text-sm !py-2 md:!py-2.5 rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-1.5 ${isInCart ? 'bg-gray-900 shadow-md hover:bg-gray-800' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
                     onClick={handleButtonClick}
                 >
-                    {productClicked ? (
+                    {isInCart ? (
                         <>
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -65,8 +65,16 @@ const ProductCard = ({ product, id, index }) => {
 
 const Carrousel = ({ products = [] }) => {
     const scrollRef = useRef(null);
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+    const [canScrollRight, setCanScrollRight] = React.useState(true);
+    
+    // Estado del carrito
+    const $cartItems = useStore(cartItems);
+    const cartProductIds = useMemo(() => new Set($cartItems.map(item => item.id)), [$cartItems]);
+    
+    const handleAddToCart = (product) => {
+        addToCart(product);
+    };
 
     const checkScroll = () => {
         if (scrollRef.current) {
@@ -115,7 +123,14 @@ const Carrousel = ({ products = [] }) => {
                 style={{ scrollbarWidth: 'none', '-ms-overflow-style': 'none' }}
             >
                 {products.map((product, index) => (
-                    <ProductCard key={`${product.id}-${index}`} product={product} id={product.id} index={index} />
+                    <ProductCard 
+                        key={`${product.id}-${index}`} 
+                        product={product} 
+                        id={product.id} 
+                        index={index}
+                        isInCart={cartProductIds.has(product.id)}
+                        onAddToCart={handleAddToCart}
+                    />
                 ))}
             </div>
 

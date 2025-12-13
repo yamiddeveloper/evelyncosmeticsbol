@@ -353,11 +353,16 @@ export default function ProductListDynamic({
                 </div>
             )}
 
-            {/* Título de sección */}
+            {/* Título de sección - cambia según filtro */}
             <div className="!px-4 !pb-5 !mt-6">
                 <h1 className="text-2xl md:text-3xl text-center text-gray-900">
-                    {title}
+                    {selectedBrand ? `Productos ${selectedBrand}` : title}
                 </h1>
+                {selectedBrand && (
+                    <p className="text-center text-gray-500 text-sm !mt-2">
+                        Filtrando por marca
+                    </p>
+                )}
             </div>
 
             {/* Lista de productos */}

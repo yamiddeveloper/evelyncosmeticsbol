@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef, memo, startTransition } from 'react';
+import { useStore } from '@nanostores/react';
 import CategoryDropdown from './CategoryDropdown';
+import { cartItems, addToCart } from '../stores/cartStore';
 
 interface Product {
     id: number;
@@ -31,11 +33,11 @@ const LOAD_MORE_COUNT = 15;
 const ProductCard = memo(({ 
     product, 
     isInCart, 
-    onToggleCart 
+    onAddToCart 
 }: { 
     product: Product; 
     isInCart: boolean; 
-    onToggleCart: (id: number) => void;
+    onAddToCart: (product: Product) => void;
 }) => (
     <div className="flex gap-4 !px-4 !py-4 border-b border-gray-100">
         <div className="w-28 h-28 shrink-0 relative">
@@ -63,7 +65,7 @@ const ProductCard = memo(({
             </div>
             
             <button 
-                onClick={() => onToggleCart(product.id)}
+                onClick={() => onAddToCart(product)}
                 className={`w-full h-[40px] text-sm font-medium !py-3 rounded-[20px] !mt-3 cursor-pointer flex items-center justify-center gap-2 transition-colors ${
                     isInCart
                         ? 'bg-gray-900 text-white hover:bg-gray-800'
@@ -101,21 +103,16 @@ export default function ProductList({
     const [activeFilter, setActiveFilter] = useState<FilterType>('none');
     const [maxPrice, setMaxPrice] = useState<string>('');
     const [selectedBrand, setSelectedBrand] = useState<string>('');
-    const [addedToCart, setAddedToCart] = useState<Set<number>>(new Set());
     const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
     const loaderRef = useRef<HTMLDivElement>(null);
+    
+    // Usar el store del carrito
+    const $cartItems = useStore(cartItems) as Array<{id: number; quantity: number; price: number}>;
+    const cartProductIds = useMemo(() => new Set($cartItems.map(item => item.id)), [$cartItems]);
 
-    // Toggle producto en carrito
-    const toggleCart = useCallback((productId: number) => {
-        setAddedToCart(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
+    // Agregar producto al carrito
+    const handleAddToCart = useCallback((product: Product) => {
+        addToCart(product);
     }, []);
 
     // Manejar cambio de precio - desactiva otros filtros
@@ -319,8 +316,8 @@ export default function ProductList({
                         <ProductCard
                             key={product.id}
                             product={product}
-                            isInCart={addedToCart.has(product.id)}
-                            onToggleCart={toggleCart}
+                            isInCart={cartProductIds.has(product.id)}
+                            onAddToCart={handleAddToCart}
                         />
                     ))
                 )}

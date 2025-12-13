@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useStore } from '@nanostores/react';
 import { motion } from 'framer-motion';
 import { FiMenu, FiShoppingCart, FiSearch, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import HamburguerMenu from './HamburguerMenu.jsx';
 import Cart from './Cart.jsx';
 import { mainCategories, extraCategories } from '../data/categories.js';
+import { cartTotal, cartCount, initCart } from '../stores/cartStore';
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false);
@@ -13,7 +15,24 @@ const Header = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [currentPath, setCurrentPath] = useState('');
     const lastScrollY = useRef(0);
+    
+    // Estado del carrito
+    const $cartTotal = useStore(cartTotal);
+    const $cartCount = useStore(cartCount);
+
+    // Inicializar carrito desde localStorage
+    useEffect(() => {
+        initCart();
+    }, []);
+
+    // Detectar página actual
+    useEffect(() => {
+        setCurrentPath(window.location.pathname);
+    }, []);
+
+    const isActive = (path) => currentPath === path || currentPath.startsWith(path + '/');
 
     
 
@@ -86,7 +105,13 @@ const Header = () => {
             <nav id="nav" className="hidden lg:flex items-center !gap-6 order-3 text-gray-700">
                 <motion.a 
                 whileHover={{ scale: 1.05 }}
-                href="/tienda" className="hover:text-gray-900 transition-colors font-medium">Tienda</motion.a>
+                href="/tienda" 
+                className={`transition-colors font-medium ${
+                    isActive('/tienda') 
+                        ? 'text-gray-900 bg-gray-100 !px-3 !py-1.5 rounded-full' 
+                        : 'hover:text-gray-900'
+                }`}
+                >Tienda</motion.a>
                 
                 {/* Dropdown Categorías */}
                 <div
@@ -217,27 +242,51 @@ const Header = () => {
                 <motion.a 
                     whileHover={{ scale: 1.05 }}
                     href="/blog" 
-                    className="hover:text-gray-900 transition-colors font-medium"
+                    className={`transition-colors font-medium ${
+                        isActive('/blog') 
+                            ? 'text-gray-900 bg-gray-100 !px-3 !py-1.5 rounded-full' 
+                            : 'hover:text-gray-900'
+                    }`}
                 >
                     Blog
                 </motion.a>
                 <motion.div 
                     whileHover={{ scale: 1.05 }}
                     id="cart" 
-                    className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                    className="order-3 flex items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300 relative" 
                     onClick={() => setIsCartOpen(true)}
                 >
                     <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                    {$cartCount > 0 && (
+                        <span className="text-sm font-medium text-gray-700 hidden lg:inline">
+                            Bs {$cartTotal.toFixed(2)}
+                        </span>
+                    )}
+                    {$cartCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium lg:hidden">
+                            {$cartCount}
+                        </span>
+                    )}
                 </motion.div>
             </nav>
             {/* Cart - solo para pequeñas pantallas */}
             <motion.div 
                 whileHover={{ scale: 1.05 }}
                 id="cart-mobile" 
-                className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300" 
+                className="order-3 flex xs:flex sm:flex md:flex lg:hidden items-center justify-center gap-1 !mr-2 lg:!mr-0 lg:!ml-2 cursor-pointer !p-2 rounded-full hover:shadow-lg transition-all duration-300 relative" 
                 onClick={() => setIsCartOpen(true)}
             >
                 <FiShoppingCart className='h-8 w-8 lg:h-6 lg:w-6'/>
+                {$cartCount > 0 && (
+                    <>
+                        <span className="text-sm font-medium text-gray-700">
+                            Bs {$cartTotal.toFixed(2)}
+                        </span>
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                            {$cartCount}
+                        </span>
+                    </>
+                )}
             </motion.div>
         
 
