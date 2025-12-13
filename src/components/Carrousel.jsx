@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useStore } from '@nanostores/react';
 import { motion } from 'framer-motion';
-import { cartItems, addToCart } from '../stores/cartStore';
+import { cartItems, addToCart, removeFromCart } from '../stores/cartStore';
 
 const ProductCard = ({ product, id, index, isInCart, onAddToCart }) => {
     const handleCardClick = () => {
@@ -72,8 +72,12 @@ const Carrousel = ({ products = [] }) => {
     const $cartItems = useStore(cartItems);
     const cartProductIds = useMemo(() => new Set($cartItems.map(item => item.id)), [$cartItems]);
     
-    const handleAddToCart = (product) => {
-        addToCart(product);
+    const handleToggleCart = (product) => {
+        if (cartProductIds.has(product.id)) {
+            removeFromCart(product.id);
+        } else {
+            addToCart(product);
+        }
     };
 
     const checkScroll = () => {
@@ -129,7 +133,7 @@ const Carrousel = ({ products = [] }) => {
                         id={product.id} 
                         index={index}
                         isInCart={cartProductIds.has(product.id)}
-                        onAddToCart={handleAddToCart}
+                        onAddToCart={handleToggleCart}
                     />
                 ))}
             </div>

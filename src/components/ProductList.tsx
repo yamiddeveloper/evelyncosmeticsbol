@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef, memo, startTransition } from 'react';
 import { useStore } from '@nanostores/react';
 import CategoryDropdown from './CategoryDropdown';
-import { cartItems, addToCart } from '../stores/cartStore';
+import { cartItems, addToCart, removeFromCart } from '../stores/cartStore';
 
 interface Product {
     id: number;
@@ -60,7 +60,7 @@ const ProductCard = memo(({
         <div className="flex-1 flex flex-col justify-between">
             <div>
                 <span className="text-[.9rem] text-gray-500 block">{product.brand || product.description || 'Marca del producto'}</span>
-                <h3 className="text-[.85rem] font-medium text-gray-900 !mt-0.5">{product.name}</h3>
+                <h3 className="text-[.85rem] font-medium text-gray-900 !mt-0.5 line-clamp-2">{product.name}</h3>
                 <p className="text-xl font-medium text-gray-900 !mt-3">{product.priceFormatted || `BOB ${product.price}`}</p>
             </div>
             
@@ -110,10 +110,14 @@ export default function ProductList({
     const $cartItems = useStore(cartItems) as Array<{id: number; quantity: number; price: number}>;
     const cartProductIds = useMemo(() => new Set($cartItems.map(item => item.id)), [$cartItems]);
 
-    // Agregar producto al carrito
-    const handleAddToCart = useCallback((product: Product) => {
-        addToCart(product);
-    }, []);
+    // Toggle producto en carrito (agregar o quitar)
+    const handleToggleCart = useCallback((product: Product) => {
+        if (cartProductIds.has(product.id)) {
+            removeFromCart(product.id);
+        } else {
+            addToCart(product);
+        }
+    }, [cartProductIds]);
 
     // Manejar cambio de precio - desactiva otros filtros
     const handlePriceChange = (value: string) => {
@@ -317,7 +321,7 @@ export default function ProductList({
                             key={product.id}
                             product={product}
                             isInCart={cartProductIds.has(product.id)}
-                            onAddToCart={handleAddToCart}
+                            onAddToCart={handleToggleCart}
                         />
                     ))
                 )}

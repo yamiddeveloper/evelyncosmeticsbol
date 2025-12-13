@@ -27,19 +27,32 @@ const subcategories = categoryData.subcategories?.map((sub: any) => ({
     label: sub.label 
 })) || [];
 
-// Filtrar productos por marca (el label de la categoría suele ser la marca)
+// Filtrar productos por marca y mapear solo campos necesarios
 const categoryLabel = categoryData.label.toLowerCase();
-const productos = allProducts.filter((product: any) => {
-    const productBrand = product.brand?.toLowerCase() || '';
-    const productName = product.name?.toLowerCase() || '';
-    return productBrand.includes(categoryLabel) || productName.includes(categoryLabel);
-});
+const productos = allProducts
+    .filter((product: any) => {
+        const productBrand = product.brand?.toLowerCase() || '';
+        const productName = product.name?.toLowerCase() || '';
+        return productBrand.includes(categoryLabel) || productName.includes(categoryLabel);
+    })
+    .map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        brand: p.brand,
+        price: p.price,
+        priceFormatted: p.priceFormatted,
+        image: p.image,
+        featured: p.featured,
+        bestSeller: p.bestSeller,
+        onSale: p.onSale,
+        backInStock: p.backInStock
+    }));
 ---
 
 <Layout title={categoryData.label}>
     <main>
         <ProductList 
-            client:load
+            client:idle
             products={productos} 
             title={categoryData.label}
             showFilters={true}

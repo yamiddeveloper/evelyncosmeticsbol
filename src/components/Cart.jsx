@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiTrash2, FiMinus, FiPlus } from 'react-icons/fi';
@@ -9,6 +9,20 @@ const Cart = ({ isOpen, onClose }) => {
     const totalProducts = useStore(cartCount);
     const subtotal = useStore(cartTotal);
     const ahorro = 0; // Calcular descuentos si aplica
+
+    // Bloquear scroll del body cuando el carrito está abierto
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        
+        // Limpiar al desmontar
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
 
     return (
         <AnimatePresence>
@@ -44,7 +58,7 @@ const Cart = ({ isOpen, onClose }) => {
                         </div>
 
                         {/* Lista de productos */}
-                        <div className="flex-1 overflow-y-auto !px-4 !py-4">
+                        <div className="flex-1 overflow-y-auto scroll-hide !px-4 !py-4">
                             {$cartItems.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-500">
                                     <svg className="w-16 h-16 !mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +86,7 @@ const Cart = ({ isOpen, onClose }) => {
                                             <div className="flex-1 flex flex-col justify-between">
                                                 <div>
                                                     <p className="text-xs text-gray-500">{item.brand}</p>
-                                                    <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                                                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2">{item.name}</h3>
                                                     <div className="flex items-center gap-2 !mt-1">
                                                         {item.originalPrice && item.originalPrice > item.price && (
                                                             <span className="text-xs text-gray-400 line-through">

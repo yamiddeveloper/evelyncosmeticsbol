@@ -73,3 +73,13 @@
     @apply text-base;
   }
 }
+
+/* Ocultar scrollbar manteniendo funcionalidad */
+.scroll-hide {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scroll-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}

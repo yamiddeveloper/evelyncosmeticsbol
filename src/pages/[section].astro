@@ -22,7 +22,7 @@ if (!sectionConfig) {
 }
 
 // Filtrar productos según la sección
-let filteredProducts = allProducts;
+let filteredProducts: any[] = [];
 let categories: { id: string; label: string }[] = [];
 
 if (sectionConfig.isCategories) {
@@ -30,15 +30,28 @@ if (sectionConfig.isCategories) {
     const allCats = getAllCategoriesFlat();
     categories = allCats.map((cat: any) => ({ id: cat.id, label: cat.label }));
 } else {
-    // Filtrar productos según el filterKey
-    filteredProducts = allProducts.filter((product: any) => product[sectionConfig.filterKey] === true);
+    // Filtrar productos según el filterKey y mapear solo campos necesarios
+    filteredProducts = allProducts
+        .filter((product: any) => product[sectionConfig.filterKey] === true)
+        .map((product: any) => ({
+            id: product.id,
+            name: product.name,
+            brand: product.brand,
+            price: product.price,
+            priceFormatted: product.priceFormatted,
+            image: product.image,
+            featured: product.featured,
+            bestSeller: product.bestSeller,
+            onSale: product.onSale,
+            backInStock: product.backInStock
+        }));
 }
 ---
 
 <Layout title={sectionConfig.titulo}>
     <main>
         <ProductList 
-            client:load
+            client:idle
             products={filteredProducts} 
             title={sectionConfig.titulo}
             showFilters={!sectionConfig.isCategories}

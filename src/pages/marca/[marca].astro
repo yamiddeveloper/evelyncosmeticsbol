@@ -36,10 +36,21 @@ const marcasMap: Record<string, string> = {
 
 const marcaNombre = marcasMap[marca as string] || marca;
 
-// Filtrar productos por marca
-const productosMarca = allProducts.filter((p: any) => 
-    p.brand?.toLowerCase() === marcaNombre?.toLowerCase()
-);
+// Filtrar productos por marca y mapear solo campos necesarios
+const productosMarca = allProducts
+    .filter((p: any) => p.brand?.toLowerCase() === marcaNombre?.toLowerCase())
+    .map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        brand: p.brand,
+        price: p.price,
+        priceFormatted: p.priceFormatted,
+        image: p.image,
+        featured: p.featured,
+        bestSeller: p.bestSeller,
+        onSale: p.onSale,
+        backInStock: p.backInStock
+    }));
 
 export function getStaticPaths() {
     return [
