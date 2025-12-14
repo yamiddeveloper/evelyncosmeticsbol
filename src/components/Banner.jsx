@@ -42,14 +42,14 @@ const Banner = () => {
     };
 
     return (
-        <div className="!mt-[28%] lg:!mt-[10%] !mb-[5%] md:!mb-[2%] lg:!mb-[2%] !px-3 sm:!px-4 md:!px-6 lg:!px-8 xl:!px-12">
-            <div className="relative w-full max-w-7xl !mx-auto overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl">
+        <div className="!mt-[20%] lg:!mt-[5%] !mb-[2%] md:!mb-[0%] lg:!mb-[0%] w-full">
+            <div className="relative w-full overflow-hidden">
                 {/* Banner Image */}
                 <div className="relative group">
                     <img 
                         src={banner.image} 
                         alt={banner.title} 
-                        className={`w-full h-[200px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[380px] 2xl:h-[420px] object-cover transition-all duration-300 ${
+                        className={`w-full h-[200px] sm:h-[220px] md:h-[260px] lg:h-[280px] xl:h-[320px] 2xl:h-[350px] object-cover transition-all duration-300 ${
                             isTransitioning ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
                         }`}
                     />
