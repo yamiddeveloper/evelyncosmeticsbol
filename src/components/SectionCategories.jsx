@@ -9,7 +9,7 @@ const SectionCategories = ({ id, titulo }) => {
             className='w-full max-w-[2000px] mx-auto !px-2 md:!px-8 lg:!px-12 !py-4 md:!py-6 lg:!py-12'
         >
             <h2 
-                className='text-[1.6rem] sm:text-[1.6rem] md:text-2xl lg:text-[2.2rem] font-semibold text-center !mb-3 md:!mb-5 lg:!mb-8'
+                className='text-lg sm:text-xl md:text-2xl lg:text-[1.75rem] font-semibold text-center !mb-3 md:!mb-5 lg:!mb-8'
             >
                 {titulo}
             </h2>
