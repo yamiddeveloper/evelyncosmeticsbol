@@ -22,7 +22,7 @@ const Banner = () => {
     };
 
     return (
-        <div className="!mt-[18%] lg:!mt-[5%] w-full">
+        <div className="!mt-[18%] lg:!mt-[5%] !mb-[5%] md:!mb-[2%] lg:!mb-[2%] w-full">
             <div className="relative w-full overflow-hidden h-[180px] sm:h-[260px] md:h-[340px] lg:h-[420px] xl:h-[430px]">
                 {banners.map((banner, index) => (
                     <div 
