@@ -201,7 +201,7 @@ export default function ProductList({
     const hasActiveFilter = activeFilter !== 'none';
 
     return (
-        <div className="min-h-screen bg-white match:!pt-18 4xs:!pt-18 xs:!pt-18 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%] flex flex-col md:flex-row min-w-full">
+        <div className="min-h-screen bg-white match:!pt-18 4xs:!pt-18 xs:!pt-18 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%] match:!pb-10 4xs:!pb-10 xs:!pb-10 sm:!pb-10 md:!pb-5 lg:!pb-5  flex flex-col md:flex-row min-w-full">
             {/* Filtros */}
             {showFilters && (
                 <div 
@@ -323,6 +323,8 @@ export default function ProductList({
                             />
                         ))
                     )}
+                </div>
+                <div className='flex flex-col items-center justify-between'>
                     {/* Trigger para infinite scroll */}
                     {hasMore && (
                         <div ref={loaderRef} className="flex justify-center !py-4 sm:!py-6">
