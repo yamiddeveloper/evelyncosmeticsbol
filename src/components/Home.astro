@@ -4,7 +4,6 @@ import Section from './Section';
 import SectionCategories from './SectionCategories';
 import SectionMarcas from './SectionMarcas';
 import allProducts from '../data/products.json';
-
 // Filtrar productos por sección
 const destacados = allProducts.filter((p: any) => p.featured === true);
 const masVendidos = allProducts.filter((p: any) => p.bestSeller === true);
@@ -19,4 +18,4 @@ const disponibles = allProducts.filter((p: any) => p.backInStock === true);
     <Section client:load id="en-oferta" titulo="En Oferta" products={enOferta} />
     <Section client:load id="disponible" titulo="Disponible en Stock" products={disponibles} />
     <SectionMarcas client:load />
-</div>
+</div> 

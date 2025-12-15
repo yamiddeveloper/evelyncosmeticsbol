@@ -45,6 +45,7 @@ const HamburguerMenu = ({ onClose }) => {
 
   const overlayClasses = `
     fixed inset-0 z-40
+    w-full h-full min-h-screen
     bg-black/50
     transition-opacity duration-300
     ${isVisible ? 'opacity-100' : 'opacity-0'}
