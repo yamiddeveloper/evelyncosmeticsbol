@@ -201,11 +201,11 @@ export default function ProductList({
     const hasActiveFilter = activeFilter !== 'none';
 
     return (
-        <div className="min-h-screen bg-white match:!pt-18 4xs:!pt-18 xs:!pt-18 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%]">
+        <div className="min-h-screen bg-white match:!pt-18 4xs:!pt-18 xs:!pt-18 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%] match:!pb-10 4xs:!pb-10 xs:!pb-10 sm:!pb-10 md:!pb-5 lg:!pb-5  flex flex-col md:flex-row min-w-full">
             {/* Filtros */}
             {showFilters && (
                 <div 
-                    className="border-b border-gray-200 !px-2 sm:!px-4 !py-2 sm:!py-4 !mt-[5%] sm:!mt-[2%]"
+                    className="border-b border-gray-200 !px-2 sm:!px-4 !py-2 sm:!py-4 !mt-[5%] sm:!mt-[2%] md:!mt-[2%]"
                 >
                     <div className="flex items-center justify-between !mb-2 sm:!mb-4">
                         <h2 className="text-xs sm:text-sm font-medium text-gray-900">Filtros</h2>
@@ -219,7 +219,7 @@ export default function ProductList({
                         )}
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cois-2 gap-2 sm:gap-3">
                         {/* Precio Max */}
                         <div>
                             <label className="text-[10px] sm:text-xs text-gray-600 block mb-0.5 sm:mb-1">Precio Max</label>
@@ -299,49 +299,49 @@ export default function ProductList({
                 </div>
             )}
 
-            {/* Título de sección */}
-            <div 
-                className="!px-2 sm:!px-4 !pb-3 sm:!pb-5 !mt-3 sm:!mt-6"
-            >
-                <h1 className="text-lg sm:text-2xl md:text-3xl text-center text-gray-900">
-                    {title}
-                </h1>
-            </div>
 
             {/* Lista de productos */}
-            <div className="flex flex-col">
-                {filteredProducts.length === 0 ? (
-                    <div className="text-center !py-8 sm:!py-12 text-gray-500">
-                        <p className="text-sm sm:text-lg">No se encontraron productos</p>
-                        <p className="text-xs sm:text-sm !mt-1 sm:!mt-2">Intenta con otro filtro</p>
-                    </div>
-                ) : (
-                    visibleProducts.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            isInCart={cartProductIds.has(product.id)}
-                            onAddToCart={handleToggleCart}
-                        />
-                    ))
-                )}
-                
-                {/* Trigger para infinite scroll */}
-                {hasMore && (
-                    <div ref={loaderRef} className="flex justify-center !py-4 sm:!py-6">
-                        <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-                    </div>
-                )}
-                
-                {/* Contador de productos */}
-                {filteredProducts.length > 0 && (
-                    <div className="text-center !py-2 sm:!py-4 text-xs sm:text-sm text-gray-500">
-                        {hasMore 
-                            ? `Mostrando ${visibleProducts.length} de ${filteredProducts.length} productos`
-                            : `${filteredProducts.length} productos`
-                        }
-                    </div>
-                )}
+            <div className="grid !mt-4 w-full">
+                <div className="!px-2 sm:!px-4 !pb-3 sm:!pb-5 !mt-3 sm:!mt-6">
+                    <h1 className="text-lg sm:text-2xl md:text-3xl text-center text-gray-900">
+                        {title}
+                    </h1>
+                </div>
+                <div className={`grid ${filteredProducts.length == 0 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+                    {filteredProducts.length === 0 ? (
+                        <div className="text-center !py-8 sm:!py-12 text-gray-500">
+                            <p className="text-sm sm:text-lg">No se encontraron productos</p>
+                            <p className="text-xs sm:text-sm !mt-1 sm:!mt-2">Intenta con otro filtro</p>
+                        </div>
+                    ) : (
+                        visibleProducts.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                isInCart={cartProductIds.has(product.id)}
+                                onAddToCart={handleToggleCart}
+                            />
+                        ))
+                    )}
+                </div>
+                <div className='flex flex-col items-center justify-between'>
+                    {/* Trigger para infinite scroll */}
+                    {hasMore && (
+                        <div ref={loaderRef} className="flex justify-center !py-4 sm:!py-6">
+                            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                        </div>
+                    )}
+                    
+                    {/* Contador de productos */}
+                    {filteredProducts.length > 0 && (
+                        <div className="text-center !py-2 sm:!py-4 text-xs sm:text-sm text-gray-500">
+                            {hasMore 
+                                ? `Mostrando ${visibleProducts.length} de ${filteredProducts.length} productos`
+                                : `${filteredProducts.length} productos`
+                            }
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
