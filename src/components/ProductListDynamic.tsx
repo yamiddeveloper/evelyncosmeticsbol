@@ -31,7 +31,7 @@ const ProductCard = memo(({
     isInCart: boolean; 
     onToggleCart: (id: number) => void;
 }) => (
-    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100">
+    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100 bg-white lg:hover:bg-gray-100 cursor-pointer rounded-[20px]">
         <div className="w-20 h-20 sm:w-28 sm:h-28 shrink-0 relative">
             <img 
                 src={product.image} 
@@ -58,10 +58,10 @@ const ProductCard = memo(({
             
             <button 
                 onClick={() => onToggleCart(product.id)}
-                className={`w-full h-[30px] sm:h-[40px] text-[10px] sm:text-sm font-medium !py-1.5 sm:!py-3 rounded-[16px] sm:rounded-[20px] !mt-1.5 sm:!mt-3 cursor-pointer flex items-center justify-center gap-1 sm:gap-2 transition-colors ${
+                className={`w-full h-[30px] sm:h-[40px] text-[10px] sm:text-sm font-medium !py-1.5 sm:!py-3 rounded-[10px] !mt-1.5 sm:!mt-3 cursor-pointer flex items-center justify-center gap-1 sm:gap-2 transition-colors ${
                     isInCart
                         ? 'bg-gray-900 text-white hover:bg-gray-800'
-                        : 'bg-gray-500 text-white hover:bg-gray-600'
+                        : 'bg-gray-600/45 text-white hover:bg-gray-600'
                 }`}
             >
                 {isInCart ? (
@@ -356,7 +356,7 @@ export default function ProductListDynamic({
             {/* Lista de productos */}
             <div className="grid !mt-4 w-full">
                 <div className="!px-2 sm:!px-4 !pb-3 sm:!pb-5 !mt-3 sm:!mt-6">
-                    <h1 className="text-lg sm:text-2xl md:text-3xl text-center text-gray-900">
+                    <h1 className="text-lg sm:text-[1.4rem] md:text-[1.6rem] text-center text-gray-900">
                         {selectedBrand ? `Productos ${selectedBrand}` : title}
                     </h1>
                     {selectedBrand && (
@@ -365,7 +365,7 @@ export default function ProductListDynamic({
                         </p>
                     )}
                 </div>
-                <div className={`grid ${products.length === 0 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+                <div className={`grid ${products.length === 0 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 gap-0 lg:gap-4 !px-2 !pr-4'}`}>
                 {loading ? (
                         // Skeleton loaders durante carga inicial
                         <>

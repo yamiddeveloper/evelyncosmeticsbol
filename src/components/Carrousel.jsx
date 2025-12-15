@@ -39,7 +39,7 @@ const ProductCard = ({ product, id, index, isInCart, onAddToCart }) => {
                 <motion.button 
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }} 
-                    className={`w-full h-[28px] sm:h-[32px] md:h-[45px] text-white font-medium text-[9px] sm:text-[10px] md:text-sm !py-1 md:!py-2.5 rounded-[16px] md:rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-0.5 md:gap-1.5 ${isInCart ? 'bg-gray-900 shadow-md hover:bg-gray-800' : 'bg-gray-500 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
+                    className={`w-full h-[28px] sm:h-[32px] md:h-[45px] text-white font-medium text-[9px] sm:text-[10px] md:text-sm !py-1 md:!py-2.5 rounded-[16px] md:rounded-[20px] transition-all cursor-pointer flex items-center justify-center gap-0.5 md:gap-1.5 ${isInCart ? 'bg-gray-900 shadow-md hover:bg-gray-800' : 'bg-gray-600/45 shadow-sm hover:shadow-md hover:bg-gray-600'}`} 
                     onClick={handleButtonClick}
                 >
                     {isInCart ? (
