@@ -31,7 +31,7 @@ const ProductCard = memo(({
     isInCart: boolean; 
     onToggleCart: (id: number) => void;
 }) => (
-    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100 bg-white lg:hover:bg-gray-100 cursor-pointer rounded-[20px]">
+    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100 bg-white lg:hover:bg-gray-50 cursor-pointer rounded-lg transition-colors">
         <div className="w-20 h-20 sm:w-28 sm:h-28 shrink-0 relative">
             <img 
                 src={product.image} 
@@ -354,18 +354,11 @@ export default function ProductListDynamic({
             )}
 
             {/* Lista de productos */}
-            <div className="grid !mt-4 w-full">
-                <div className="!px-2 sm:!px-4 !pb-3 sm:!pb-5 !mt-3 sm:!mt-6">
-                    <h1 className="text-lg sm:text-[1.4rem] md:text-[1.6rem] text-center text-gray-900">
-                        {selectedBrand ? `Productos ${selectedBrand}` : title}
-                    </h1>
-                    {selectedBrand && (
-                        <p className="text-center text-gray-500 text-xs sm:text-sm !mt-1 sm:!mt-2">
-                            Filtrando por marca
-                        </p>
-                    )}
-                </div>
-                <div className={`grid ${products.length === 0 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 gap-0 lg:gap-4 !px-2 !pr-4'}`}>
+            <main className="flex-1 !px-2 sm:!px-4 md:!px-6">
+                <h1 className="text-lg md:text-xl font-medium text-gray-900 !py-5 md:!py-10 text-center">
+                    {selectedBrand ? `Productos ${selectedBrand}` : title}
+                </h1>
+                <div className={`grid ${products.length === 0 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2 gap-1 lg:gap-3 !px-2 !pr-4'}`}>
                 {loading ? (
                         // Skeleton loaders durante carga inicial
                         <>
@@ -389,27 +382,25 @@ export default function ProductListDynamic({
                         ))
                     )}
                 </div>
-                <div className='flex flex-col items-center justify-between'>
-                    {/* Trigger para infinite scroll */}
-                    {hasMore && !loading && (
-                        <div ref={loaderRef} className="flex justify-center !py-4 sm:!py-6">
-                            {loadingMore && (
-                                <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-                            )}
-                        </div>
-                    )}
-                    
-                    {/* Contador de productos */}
-                    {!loading && products.length > 0 && (
-                        <div className="text-center !py-2 sm:!py-4 text-xs sm:text-sm text-gray-500">
-                            {hasMore 
-                                ? `Mostrando ${products.length} de ${total} productos`
-                                : `${total} productos`
-                            }
-                        </div>
-                    )}
-                </div>
-            </div>
+                {/* Trigger para infinite scroll */}
+                {hasMore && !loading && (
+                    <div ref={loaderRef} className="flex justify-center !py-6">
+                        {loadingMore && (
+                            <div className="w-5 h-5 border-2 border-gray-200 border-t-gray-500 rounded-full animate-spin" />
+                        )}
+                    </div>
+                )}
+                
+                {/* Contador de productos */}
+                {!loading && products.length > 0 && (
+                    <div className="text-center !py-3 text-[11px] md:text-xs text-gray-400">
+                        {hasMore 
+                            ? `${products.length} de ${total}`
+                            : `${total} productos`
+                        }
+                    </div>
+                )}
+            </main>
         </div>
     );
 }

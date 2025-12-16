@@ -39,7 +39,7 @@ const ProductCard = memo(({
     isInCart: boolean; 
     onAddToCart: (product: Product) => void;
 }) => (
-    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100 bg-white lg:hover:bg-gray-100  cursor-pointer">
+    <div className="flex gap-2 sm:gap-4 !px-2 sm:!px-4 !py-2 sm:!py-4 border-b border-gray-100 bg-white lg:hover:bg-gray-50 cursor-pointer rounded-lg transition-colors">
         <div className="w-20 h-20 sm:w-28 sm:h-28 shrink-0 relative">
             <img 
                 src={product.image} 
@@ -201,113 +201,141 @@ export default function ProductList({
     const hasActiveFilter = activeFilter !== 'none';
 
     return (
-        <div className="min-h-screen bg-white match:!pt-18 4xs:!pt-18 xs:!pt-18 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%] match:!pb-10 4xs:!pb-10 xs:!pb-10 sm:!pb-10 md:!pb-5 lg:!pb-5  flex flex-col md:flex-row min-w-full">
+        <div className="min-h-screen bg-white !pt-16 sm:!pt-18 md:!pt-[5%] lg:!pt-[5%] !pb-10 md:!pb-5 lg:!pb-5 flex flex-col md:flex-row min-w-full">
             {/* Filtros */}
             {showFilters && (
-                <div 
-                    className="border-b border-gray-200 !px-2 sm:!px-4 !py-2 sm:!py-4 !mt-[5%] sm:!mt-[2%] md:!mt-[2%]"
-                >
-                    <div className="flex items-center justify-between !mb-2 sm:!mb-4">
-                        <h2 className="text-xs sm:text-sm font-medium text-gray-900">Filtros</h2>
-                        {hasActiveFilter && (
-                            <button 
-                                onClick={clearFilters}
-                                className="text-xs text-gray-500 hover:text-gray-700 underline"
-                            >
-                                Limpiar filtro
-                            </button>
-                        )}
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cois-2 gap-2 sm:gap-3">
-                        {/* Precio Max */}
-                        <div>
-                            <label className="text-[10px] sm:text-xs text-gray-600 block mb-0.5 sm:mb-1">Precio Max</label>
-                            <div className="relative">
-                                <span className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-gray-500 text-[10px] sm:text-sm">Bs</span>
-                                <input 
-                                    type="number" 
-                                    value={maxPrice}
-                                    onChange={(e) => handlePriceChange(e.target.value)}
-                                    disabled={activeFilter === 'brand'}
-                                    className={`w-full border rounded-md !pl-6 sm:!pl-8 !pr-2 sm:!pr-3 !py-1.5 sm:!py-2 text-[10px] sm:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 ${
-                                        activeFilter === 'brand' 
-                                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
-                                            : 'border-gray-300 bg-white'
-                                    }`}
-                                    placeholder="Ej: 200"
-                                />
+                <aside className="w-full md:w-64 lg:w-72 shrink-0 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/50 md:bg-white">
+                    <div className="!px-3 sm:!px-4 !py-3 md:!py-6">
+                        {/* Header filtros */}
+                        <div className="flex items-center justify-between !mb-3 md:!mb-5">
+                            <div className="flex items-center gap-2 !pt-4">
+                                <svg className="w-4 h-4 text-gray-500 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                <h2 className="text-xs md:text-sm font-semibold text-gray-800 uppercase tracking-wide">Filtros</h2>
                             </div>
+                            {hasActiveFilter && (
+                                <button 
+                                    onClick={clearFilters}
+                                    className="text-[10px] md:text-xs text-gray-500 hover:text-gray-800 flex items-center gap-1 transition-colors"
+                                >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Limpiar
+                                </button>
+                            )}
                         </div>
                         
-                        {/* Marca */}
-                        <div>
-                            <label className="text-[10px] sm:text-xs text-gray-600 block mb-0.5 sm:mb-1">Marca</label>
-                            <select 
-                                value={selectedBrand}
-                                onChange={(e) => handleBrandChange(e.target.value)}
-                                disabled={activeFilter === 'price'}
-                                className={`w-full border rounded-md !px-2 sm:!px-4 !py-1.5 sm:!py-2 text-[10px] sm:text-sm focus:outline-none cursor-pointer ${
-                                    activeFilter === 'price' 
-                                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
-                                        : 'bg-white border-gray-300 text-gray-900'
-                                }`}
-                            >
-                                <option value="">Todas las marcas</option>
-                                <option value="Avene">Avene</option>
-                                <option value="Bella Aurora">Bella Aurora</option>
-                                <option value="Bioderma">Bioderma</option>
-                                <option value="Byphasse">Byphasse</option>
-                                <option value="Cerave">Cerave</option>
-                                <option value="Cetaphil">Cetaphil</option>
-                                <option value="Cosrx">Cosrx</option>
-                                <option value="Dove">Dove</option>
-                                <option value="Ecran">Ecran</option>
-                                <option value="Eucerin">Eucerin</option>
-                                <option value="Garnier">Garnier</option>
-                                <option value="Hada Labo">Hada Labo</option>
-                                <option value="Isdin">Isdin</option>
-                                <option value="La Roche Posay">La Roche Posay</option>
-                                <option value="Lactovit">Lactovit</option>
-                                <option value="L'Oréal">L'Oréal</option>
-                                <option value="Missha">Missha</option>
-                                <option value="Neutrogena">Neutrogena</option>
-                                <option value="Nivea">Nivea</option>
-                                <option value="Principia">Principia</option>
-                                <option value="Some By Mi">Some By Mi</option>
-                                <option value="The Ordinary">The Ordinary</option>
-                                <option value="Tocobo">Tocobo</option>
-                                <option value="Uriage">Uriage</option>
-                                <option value="Vichy">Vichy</option>
-                            </select>
+                        {/* Filtros en grid compacto en móvil, vertical en desktop */}
+                        <div className="grid grid-cols-2 md:grid-cols-1 gap-2 md:gap-4">
+                            {/* Precio Max */}
+                            <div className="space-y-1 md:space-y-2">
+                                <label className="text-[10px] md:text-xs font-medium text-gray-600 uppercase tracking-wider">Precio máximo</label>
+                                <div className="relative">
+                                    <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] md:text-xs font-medium">Bs</span>
+                                    <input 
+                                        type="number" 
+                                        value={maxPrice}
+                                        onChange={(e) => handlePriceChange(e.target.value)}
+                                        disabled={activeFilter === 'brand'}
+                                        className={`w-full border rounded-lg !pl-7 md:!pl-8 !pr-2 !py-2 md:!py-2.5 text-[11px] md:text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-all ${
+                                            activeFilter === 'brand' 
+                                                ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                                                : 'border-gray-200 bg-white hover:border-gray-300'
+                                        }`}
+                                        placeholder="200"
+                                    />
+                                </div>
+                            </div>
+                            
+                            {/* Marca */}
+                            <div className="space-y-1 md:space-y-2">
+                                <label className="text-[10px] md:text-xs font-medium text-gray-600 uppercase tracking-wider">Marca</label>
+                                <select 
+                                    value={selectedBrand}
+                                    onChange={(e) => handleBrandChange(e.target.value)}
+                                    disabled={activeFilter === 'price'}
+                                    className={`w-full border rounded-lg !px-2.5 !py-2 md:!py-2.5 text-[11px] md:text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 cursor-pointer transition-all appearance-none bg-no-repeat bg-[length:16px] bg-[right_8px_center] ${
+                                        activeFilter === 'price' 
+                                            ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed' 
+                                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+                                    }`}
+                                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
+                                >
+                                    <option value="">Todas</option>
+                                    <option value="Avene">Avene</option>
+                                    <option value="Bella Aurora">Bella Aurora</option>
+                                    <option value="Bioderma">Bioderma</option>
+                                    <option value="Byphasse">Byphasse</option>
+                                    <option value="Cerave">Cerave</option>
+                                    <option value="Cetaphil">Cetaphil</option>
+                                    <option value="Cosrx">Cosrx</option>
+                                    <option value="Dove">Dove</option>
+                                    <option value="Ecran">Ecran</option>
+                                    <option value="Eucerin">Eucerin</option>
+                                    <option value="Garnier">Garnier</option>
+                                    <option value="Hada Labo">Hada Labo</option>
+                                    <option value="Isdin">Isdin</option>
+                                    <option value="La Roche Posay">La Roche Posay</option>
+                                    <option value="Lactovit">Lactovit</option>
+                                    <option value="L'Oréal">L'Oréal</option>
+                                    <option value="Missha">Missha</option>
+                                    <option value="Neutrogena">Neutrogena</option>
+                                    <option value="Nivea">Nivea</option>
+                                    <option value="Principia">Principia</option>
+                                    <option value="Some By Mi">Some By Mi</option>
+                                    <option value="The Ordinary">The Ordinary</option>
+                                    <option value="Tocobo">Tocobo</option>
+                                    <option value="Uriage">Uriage</option>
+                                    <option value="Vichy">Vichy</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Indicador de filtro activo */}
-                    {hasActiveFilter && (
-                        <div className="!mt-2 sm:!mt-3 text-[10px] sm:text-xs text-gray-500 text-center">
-                            {activeFilter === 'price' && `Mostrando productos hasta Bs ${maxPrice}`}
-                            {activeFilter === 'brand' && `Mostrando productos de ${selectedBrand}`}
-                            {` (${filteredProducts.length} productos)`}
+                        {/* Indicador de filtro activo - más elegante */}
+                        {hasActiveFilter && (
+                            <div className="!mt-3 md:!mt-4 !px-2.5 !py-2 bg-gray-100 rounded-lg">
+                                <p className="text-[10px] md:text-xs text-gray-600 text-center">
+                                    {activeFilter === 'price' && (
+                                        <span className="flex items-center justify-center gap-1">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Hasta Bs {maxPrice}
+                                        </span>
+                                    )}
+                                    {activeFilter === 'brand' && (
+                                        <span className="flex items-center justify-center gap-1">
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                            </svg>
+                                            {selectedBrand}
+                                        </span>
+                                    )}
+                                    <span className="text-gray-400 !ml-1">({filteredProducts.length})</span>
+                                </p>
+                            </div>
+                        )}
+                        
+                        {/* Separador visual en desktop */}
+                        <div className="hidden md:block !my-5 border-t border-gray-100"></div>
+                        
+                        {/* Acceso rápido a categorías */}
+                        <div className="!mt-3 md:!mt-0">
+                            <CategoryDropdown />
                         </div>
-                    )}
-                    
-                    {/* Acceso rápido a categorías */}
-                    <div className="!mt-2 sm:!mt-3">
-                        <CategoryDropdown />
                     </div>
-                </div>
+                </aside>
             )}
 
 
             {/* Lista de productos */}
-            <div className="grid !mt-4 w-full">
-                <div className="!px-2 sm:!px-4 !pb-3 sm:!pb-5 !mt-3 sm:!mt-6">
-                    <h1 className="text-lg sm:text-[1.4rem] md:text-[1.6rem] text-center text-gray-900">
-                        {title}
-                    </h1>
-                </div>
-                <div className={`grid ${filteredProducts.length == 0 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2 gap-5 !px-2 !pr-4'}`}>
+            <main className="flex-1 !px-2 sm:!px-4 md:!px-6">
+                <h1 className="text-lg md:text-xl font-medium text-gray-900 !py-5 md:!py-10 text-center">
+                    {title}
+                </h1>
+                <div className={`grid ${filteredProducts.length == 0 ? 'grid-cols-1' : 'grid-cols-1 xl:grid-cols-2 gap-1 md:gap-2'}`}>
                     {filteredProducts.length === 0 ? (
                         <div className="text-center !py-8 sm:!py-12 text-gray-500">
                             <p className="text-sm sm:text-lg">No se encontraron productos</p>
@@ -324,25 +352,23 @@ export default function ProductList({
                         ))
                     )}
                 </div>
-                <div className='flex flex-col items-center justify-between'>
-                    {/* Trigger para infinite scroll */}
-                    {hasMore && (
-                        <div ref={loaderRef} className="flex justify-center !py-4 sm:!py-6">
-                            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-                        </div>
-                    )}
-                    
-                    {/* Contador de productos */}
-                    {filteredProducts.length > 0 && (
-                        <div className="text-center !py-2 sm:!py-4 text-xs sm:text-sm text-gray-500">
-                            {hasMore 
-                                ? `Mostrando ${visibleProducts.length} de ${filteredProducts.length} productos`
-                                : `${filteredProducts.length} productos`
-                            }
-                        </div>
-                    )}
-                </div>
-            </div>
+                {/* Trigger para infinite scroll */}
+                {hasMore && (
+                    <div ref={loaderRef} className="flex justify-center !py-6">
+                        <div className="w-5 h-5 border-2 border-gray-200 border-t-gray-500 rounded-full animate-spin"></div>
+                    </div>
+                )}
+                
+                {/* Contador de productos */}
+                {filteredProducts.length > 0 && (
+                    <div className="text-center !py-3 text-[11px] md:text-xs text-gray-400">
+                        {hasMore 
+                            ? `${visibleProducts.length} de ${filteredProducts.length}`
+                            : `${filteredProducts.length} productos`
+                        }
+                    </div>
+                )}
+            </main>
         </div>
     );
 }

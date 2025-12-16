@@ -17,27 +17,22 @@ interface CategoryDropdownProps {
     className?: string;
 }
 
-// Number of main categories to show initially
-const INITIAL_CATEGORIES_COUNT = 3;
+const allCategories = [...(mainCategories as Category[]), ...(extraCategories as Category[])];
 
 export default function CategoryDropdown({ className = '' }: CategoryDropdownProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [showMore, setShowMore] = useState(false);
-    const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+    // Mobile state
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+    const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
+    
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Categories to display based on showMore state
-    const visibleMainCategories = showMore 
-        ? (mainCategories as Category[]) 
-        : (mainCategories as Category[]).slice(0, INITIAL_CATEGORIES_COUNT);
-    const visibleExtraCategories = showMore ? (extraCategories as Category[]) : [];
-
-    // Close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-                setExpandedCategory(null);
+                setIsCategoryOpen(false);
+                setIsSubcategoryOpen(false);
             }
         };
 
@@ -45,110 +40,170 @@ export default function CategoryDropdown({ className = '' }: CategoryDropdownPro
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const toggleCategoryExpand = (categoryId: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+    // Mobile: Handle category selection
+    const handleCategorySelect = (category: Category) => {
+        if (category.subcategories.length === 0) {
+            // No subcategories - go directly to category page
+            window.location.href = `/categoria/${category.id}`;
+        } else {
+            // Has subcategories - show subcategory dropdown
+            setSelectedCategory(category);
+            setIsCategoryOpen(false);
+            setIsSubcategoryOpen(false);
+        }
     };
 
-    const handleSubcategorySelect = (categoryId: string, subcategoryId: string) => {
-        window.location.href = `/categoria/${categoryId}?sub=${subcategoryId}`;
+    // Mobile: Clear selection
+    const clearSelection = () => {
+        setSelectedCategory(null);
+        setIsSubcategoryOpen(false);
     };
 
-    const renderCategory = (category: Category) => {
-        const hasSubcategories = category.subcategories && category.subcategories.length > 0;
-        const isExpanded = expandedCategory === category.id;
-
-        return (
-            <div key={category.id}>
-                <div className="flex items-center border-b border-gray-100">
-                    {/* Category name - clickable link */}
-                    <a
-                        href={`/categoria/${category.id}`}
-                        className="flex-1 !px-3 !py-2 text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors"
+    return (
+        <div ref={dropdownRef} className={`${className}`}>
+            {/* ========== MOBILE VERSION ========== */}
+            <div className="lg:hidden space-y-3">
+                {/* Category Dropdown */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setIsCategoryOpen(!isCategoryOpen);
+                            setIsSubcategoryOpen(false);
+                        }}
+                        className="flex w-full items-center justify-between !px-3 !py-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors !mb-4"
                     >
-                        <span className="text-xs sm:text-sm">{category.label}</span>
-                    </a>
-                    
-                    {/* Expand button - only if has subcategories */}
-                    {hasSubcategories && (
-                        <div
-                            onClick={(e) => toggleCategoryExpand(category.id, e)}
-                            className="!px-3 !py-2 text-gray-400 hover:bg-gray-100 cursor-pointer transition-colors"
-                        >
-                            {isExpanded ? (
-                                <FiChevronUp className="text-base" />
-                            ) : (
-                                <FiChevronDown className="text-base" />
+                        <div className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+                                <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+                            </svg>
+                            <span className={selectedCategory ? 'text-gray-900 font-medium' : ''}>
+                                {selectedCategory ? selectedCategory.label : 'Seleccionar categoría'}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {selectedCategory && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        clearSelection();
+                                    }}
+                                    className="!p-1 text-gray-400 hover:text-gray-600"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             )}
+                            {isCategoryOpen ? <FiChevronUp /> : <FiChevronDown />}
+                        </div>
+                    </button>
+
+                    {isCategoryOpen && (
+                        <div className="absolute top-full left-0 right-0 !mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+                            {allCategories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    onClick={() => handleCategorySelect(category)}
+                                    className={`w-full text-left !px-3 !py-2.5 text-sm border-b border-gray-100 last:border-b-0 transition-colors ${
+                                        selectedCategory?.id === category.id 
+                                            ? 'bg-gray-100 text-gray-900 font-medium' 
+                                            : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <span>{category.label}</span>
+                                        {category.subcategories.length > 0 && (
+                                            <span className="text-xs text-gray-400">
+                                                {category.subcategories.length} sub
+                                            </span>
+                                        )}
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     )}
                 </div>
 
-                {/* Subcategories - shown when expanded */}
-                {hasSubcategories && isExpanded && (
-                    <div className="bg-gray-50">
-                        {category.subcategories.map((sub) => (
-                            <a
-                                key={sub.id}
-                                href={`/categoria/${category.id}/${sub.id}`}
-                                className="block !px-5 !py-1.5 text-xs sm:text-sm text-gray-600 hover:bg-gray-100 border-b border-gray-100 last:border-b-0 transition-colors"
-                            >
-                                {sub.label}
-                            </a>
-                        ))}
+                {/* Subcategory Dropdown - Only shows when category is selected and has subcategories */}
+                {selectedCategory && selectedCategory.subcategories.length > 0 && (
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsSubcategoryOpen(!isSubcategoryOpen)}
+                            className="flex w-full items-center justify-between !px-3 !py-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors !mb-4"
+                        >
+                            <span>Seleccionar subcategoría</span>
+                            {isSubcategoryOpen ? <FiChevronUp /> : <FiChevronDown />}
+                        </button>
+
+                        {isSubcategoryOpen && (
+                            <div className="absolute top-full left-0 right-0 !mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                                {selectedCategory.subcategories.map((sub) => (
+                                    <a
+                                        key={sub.id}
+                                        href={`/categoria/${selectedCategory.id}/${sub.id}`}
+                                        className="block !px-3 !py-2.5 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors"
+                                    >
+                                        {sub.label}
+                                    </a>
+                                ))}
+                            </div>
+                        )}
                     </div>
+                )}
+
+                {/* Go to category button - Shows when category selected */}
+                {selectedCategory && (
+                    <a
+                        href={`/categoria/${selectedCategory.id}`}
+                        className="flex items-center justify-center gap-2 w-full !px-3 !py-2.5 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                        <span>Ver {selectedCategory.label}</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 )}
             </div>
-        );
-    };
 
-    return (
-        <div ref={dropdownRef} className={`relative ${className}`}>
-            {/* Main Button */}
-            <button
-                onClick={() => {
-                    setIsOpen(!isOpen);
-                    if (!isOpen) {
-                        setExpandedCategory(null);
-                    }
-                }}
-                className={`flex w-full items-center justify-between !px-3 !py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors border border-gray-200 rounded-md ${isOpen ? 'bg-gray-50' : ''}`}
-            >
-                <div className="flex items-center gap-x-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="bi bi-tag" viewBox="0 0 16 16">
-                        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
-                        <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
-                    </svg>
-                    <span className="text-xs sm:text-sm">Categorías</span>
-                </div>
-                
-                {isOpen ? (
-                    <FiChevronUp className="text-gray-400" />
-                ) : (
-                    <FiChevronDown className="text-gray-400" />
-                )}
-            </button>
-
-            {/* Dropdown Menu */}
-            {isOpen && (
-                <div className="absolute top-full left-0 right-0 !mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
-                    {/* Main Categories (first 3 or all if showMore) */}
-                    {visibleMainCategories.map(renderCategory)}
-
-                    {/* Extra Categories (only if showMore) */}
-                    {visibleExtraCategories.map(renderCategory)}
-
-                    {/* Ver más / Ver menos button */}
-                    <div
-                        onClick={() => setShowMore(!showMore)}
-                        className="flex items-center justify-center !px-3 !py-2 text-gray-500 hover:bg-gray-50 cursor-pointer transition-colors border-t border-gray-200"
-                    >
-                        <span className="text-xs font-medium">
-                            {showMore ? 'Ver menos' : 'Ver más categorías'}
-                        </span>
+            {/* ========== DESKTOP VERSION ========== */}
+            <div className="hidden lg:block">
+                <div className="!px-3 !py-2.5 !mb-3 bg-gray-50 border border-gray-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0"/>
+                            <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z"/>
+                        </svg>
+                        <span>Categorías</span>
                     </div>
                 </div>
-            )}
+                <ul className="space-y-1">
+                    {allCategories.map((category) => (
+                        <li key={category.id}>
+                            <a
+                                href={`/categoria/${category.id}`}
+                                className="block !px-3 !py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                            >
+                                {category.label}
+                            </a>
+                            {category.subcategories.length > 0 && (
+                                <ul className="!ml-4 !mt-1 space-y-0.5">
+                                    {category.subcategories.map((sub) => (
+                                        <li key={sub.id}>
+                                            <a
+                                                href={`/categoria/${category.id}/${sub.id}`}
+                                                className="block !px-3 !py-1.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
+                                            >
+                                                {sub.label}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }
