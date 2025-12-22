@@ -38,6 +38,8 @@ function extractProducts(html) {
     // Patrón para encontrar títulos de productos
     const titleRegex = /class="product_title[^"]*"[^>]*>([^<]+)</g;
     const priceRegex = /BOB\s*([\d,.]+)/g;
+    const oldPriceRegex = /class="product_old-price[^"]*"[^>]*>([\d,.]+)\s*BOB/gi;
+    
     const imageRegex = /src="(https:\/\/[^"]*kyte[^"]*\.(jpg|jpeg|png|webp)[^"]*)"/gi;
     const descriptionRegex = /class="[^"]*description[^"]*"[^>]*>([^<]+)</gi;
     
@@ -54,6 +56,12 @@ function extractProducts(html) {
         prices.push(priceMatch[1].trim());
     }
     
+    let oldPriceMatch;
+    const oldPrices = [];
+    while ((oldPriceMatch = oldPriceRegex.exec(html)) !== null) {
+        oldPrices.push(oldPriceMatch[1].trim());
+    }
+    
     let imageMatch;
     const images = [];
     while ((imageMatch = imageRegex.exec(html)) !== null) {
@@ -62,9 +70,9 @@ function extractProducts(html) {
         }
     }
     
-    console.log(`Encontrados: ${titles.length} títulos, ${prices.length} precios, ${images.length} imágenes`);
+    console.log(`Encontrados: ${titles.length} títulos, ${prices.length} precios, ${oldPrices.length} precios anteriores, ${images.length} imágenes`);
     
-    return { titles, prices, images };
+    return { titles, prices, oldPrices, images };
 }
 
 // Función para extraer marca del nombre del producto
@@ -153,6 +161,7 @@ async function scrapeKyteCatalog() {
         console.log('='.repeat(50));
         console.log(`Títulos encontrados: ${extracted.titles.length}`);
         console.log(`Precios encontrados: ${extracted.prices.length}`);
+        console.log(`Precios anteriores encontrados: ${extracted.oldPrices.length}`);
         console.log(`Imágenes encontradas: ${extracted.images.length}`);
         
         if (extracted.titles.length === 0) {
